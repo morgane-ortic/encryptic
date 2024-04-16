@@ -7,7 +7,7 @@ clear()
 #Global variables
 username = ""
 password = ""
-credentials = [username, password]
+credentials = []
 
 # Functions
 def register():
@@ -21,17 +21,17 @@ def register():
     clear()
     print("You can now login with your new account. \n")
     print("Redirecting to login page", end='', flush=True)
-    time.sleep(0.5)
+    time.sleep(0.2)
     print(".", end='', flush=True)
-    time.sleep(0.5)
+    time.sleep(0.2)
     print(".", end='', flush=True)
-    time.sleep(0.5)
+    time.sleep(0.2)
     print(".", end='', flush=True)
-    time.sleep(0.5)
+    time.sleep(0.2)
     print(".", end='', flush=True)
-    time.sleep(0.5)
+    time.sleep(0.2)
     print(".", end='', flush=True)
-    time.sleep(0.5)
+    time.sleep(0.2)
     print(".", end='', flush=True)
     time.sleep(1)
     clear()
