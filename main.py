@@ -5,7 +5,7 @@ clear = lambda: os.system('clear')
 clear()
 
 # Make sure to set up your API key
-openai.api_key = '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'
+openai.api_key = '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'
 
 # just information for the user
 def display_welcome_message():
