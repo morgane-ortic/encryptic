@@ -1,7 +1,8 @@
 from cryptography.fernet import Fernet
 
 # we will be encrypting the below string.
-message = (input("Enter the message you want to encrypt: "))
+name = (input("Enter your name: "))
+message = (input(f"Hi {name}, enter the message you want to encrypt: "))
 
 # generate a key for encryption and decryption
 # You can use fernet to generate 
