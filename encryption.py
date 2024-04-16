@@ -1,7 +1,7 @@
 from cryptography.fernet import Fernet
 
 # we will be encrypting the below string.
-
+decrypted = False
 name = (input("Enter your name :"))
 password = (input("Enter a password :"))
 message = (input(f"Hello {name}, enter the message you want to encrypt: "))
@@ -34,12 +34,17 @@ def decryption():
 print("original string: ", message)
 print("encrypted string: ", encMessage)
 print("Ready for decryption")
-name_input = input("What\'s your name? ")
-if name_input == name:
-    password_input = input(f"Hello, {name}. Please enter your password: ")
-    if password_input == password:
-        decryption()
+while decrypted == False:
+    name_input = input("What\'s your name? ")
+    if name_input == name:
+        password_input = input(f"Hello, {name}. Please enter your password: ")
+        if password_input == password:
+            decrypted = True
+            decryption()
+        else:
+            print("This is not the password >:()")
     else:
-        print("This is not the password >:()")
-else:
-    print("Sorry, again?")
+        print("Sorry, again?")
+
+
+decrypted = False
