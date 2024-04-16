@@ -1,8 +1,9 @@
 from cryptography.fernet import Fernet
+from stringcolor import cs
 
 # we will be encrypting the below string.
-name = (input("Enter your name: "))
-message = (input(f"Hi {name}, enter the message you want to encrypt: "))
+name = (input(cs("Enter your name: ", "cyan")))
+message = input(f"Hi {cs(name.title(), 'yellow')}, enter the message you want to encrypt: ")
 
 # generate a key for encryption and decryption
 # You can use fernet to generate 
