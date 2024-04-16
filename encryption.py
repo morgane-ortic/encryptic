@@ -36,15 +36,17 @@ print("encrypted string: ", encMessage)
 print("Ready for decryption")
 while decrypted == False:
     name_input = input("What\'s your name? ")
-    if name_input == name:
-        password_input = input(f"Hello, {name}. Please enter your password: ")
-        if password_input == password:
-            decrypted = True
-            decryption()
-        else:
-            print("This is not the password >:()")
-    else:
-        print("Sorry, again?")
+    if name_input == name and decrypted == False:
+        while True:  # added this line
+            password_input = input(f"Hello, {name}. Please enter your password: ")
+            name_given = True
+            if password_input == password:
+                decrypted = True
+                decryption()
+                break  # added this line
+            else:
+                print("This is not the password >:()")
 
 
 decrypted = False
+name_given = True
