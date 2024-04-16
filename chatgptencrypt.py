@@ -1,5 +1,6 @@
 import hashlib
 from cryptography.fernet import Fernet
+from stringcolor import cs
 
 # Function to create a new user account
 def create_user(username, password):
@@ -53,8 +54,8 @@ key = Fernet.generate_key()
 f = Fernet(key)
 
 while True:
-    print("\n1. Create Account\n2. Login\n3. Exit")
-    choice = input("Enter your choice: ")
+    print(cs("\n1. Create Account\n2. Login\n3. Exit", "yellow"))
+    choice = input(cs("Enter your choice: ", "green"))
 
     if choice == "1":
         username = input("Enter username: ")
