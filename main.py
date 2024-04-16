@@ -1,48 +1,72 @@
-import openai
+import time
+import os
 
-# Make sure to set up your API key
-openai.api_key = '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'
+clear = lambda: os.system('clear')
+clear()
 
-# just information for the user
-def display_welcome_message():
-    print("Welcome to ChatGPT!")
-    print("Type 'quit' to exit the chat.\n")
+#Global variables
+username = ""
+password = ""
+credentials = []
 
-# getting user input and return whatever he typed in
-def get_user_input():
-    return input("You: ")
+# Functions
+def register():
+    username = input("Enter a new username: ")
+    password = input("Enter a new password: ")
+    credentials.append(username)
+    credentials.append(password)
+    clear()
+    print("Registration successful! \n")
+    time.sleep(2)
+    clear()
+    print("You can now login with your new account. \n")
+    print("Redirecting to login page", end='', flush=True)
+    time.sleep(0.2)
+    print(".", end='', flush=True)
+    time.sleep(0.2)
+    print(".", end='', flush=True)
+    time.sleep(0.2)
+    print(".", end='', flush=True)
+    time.sleep(0.2)
+    print(".", end='', flush=True)
+    time.sleep(0.2)
+    print(".", end='', flush=True)
+    time.sleep(0.2)
+    print(".", end='', flush=True)
+    time.sleep(1)
+    clear()
+    login()
 
-# USING AI TO GET RESPONSE
-def get_chatgpt_response(user_input, completions:int):
-    response = openai.Completion.create(
-        engine="gpt-3.5-turbo-instruct",    # choosing model of openai's AI
-        prompt=user_input,                  # choosing what to use for prompting
-        max_tokens=1500,                    # limit the maximum response tokens
-        temperature=1.0,                    # choosing temperature (more random/creative here)
-        n=completions,                      # modifiable completion number
-        best_of=3,                          # Generates n * best_of completions and returns the best n.
-        echo=False,                         # Return the user's input in the response if set to True
-        presence_penalty=0.5,               # higher value = more likely to introduce new topics
-        frequency_penalty=0.5               # higher value = more likely to repeat information
-    )
-    choices = []
-    for i in range(completions):
-        choices.append(response.choices[i].text.strip())
-    return choices
-
-# chat loop
-def chat_interface():
-    display_welcome_message()
-    while True: # its not actually a chat, Completion can not remember
-        user_input = get_user_input()
-        if user_input.lower() == 'quit':
-            break
-        response = get_chatgpt_response(user_input, 1)
-        print("CHAT GPT: ")
-        for i in response:
-            print(i)
+def login():
+    username_login = input("Enter your login username: ")
+    password_login = input("Enter your password: ")
+    clear()
+    if username_login == credentials[0] and password_login == credentials[1]:
+        clear()
+        print("Login successful!")
+        time.sleep(2)
+        print("\nWelcome, " + username_login + "!")  # Example of concatenation
+        time.sleep(2)
+        clear()
+    else:
+        print("Login failed. Please try again.")
+        time.sleep(2)
+        clear()
+        login()
 
 
-# running the whole thing (explain name main thing?)
-if __name__ == '__main__':
-    chat_interface()
+#======================================================================================================
+# This is where the program starts. Registration and login functions are called here.
+print("Welcome to the encryptian program. \n")
+time.sleep(1)
+
+choice = input('Would you like to register or login? (register/login) \n', )
+while choice != 'register' or 'login':
+    if choice == 'register':
+        clear()
+        register()
+        break
+    elif choice == 'login':
+        clear()
+        login()
+        break
