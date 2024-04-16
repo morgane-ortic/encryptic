@@ -14,10 +14,10 @@ def get_user_input():
 
 # USING AI TO GET RESPONSE
 def get_chatgpt_response(user_input, completions:int):
-    response = openai.ChatCompletion.create(
+    response = openai.Completion.create(
         engine="gpt-3.5-turbo-instruct",    # choosing model of openai's AI
         prompt=user_input,                  # choosing what to use for prompting
-        max_tokens=1500,                     # limit the maximum response tokens
+        max_tokens=1500,                    # limit the maximum response tokens
         temperature=1.0,                    # choosing temperature (more random/creative here)
         n=completions,                      # modifiable completion number
         best_of=3,                          # Generates n * best_of completions and returns the best n.
