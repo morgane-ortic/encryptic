@@ -1,4 +1,8 @@
 import openai
+import os
+
+clear = lambda: os.system('clear')
+clear()
 
 # Make sure to set up your API key
 openai.api_key = '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'
