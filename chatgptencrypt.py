@@ -45,6 +45,25 @@ def verify_password(password, hashed_password):
     # Compare the hashed passwords
     return hashed_password_to_verify == hashed_password
 
+# Function to add a message to the user's account
+def add_message(username, message):
+    encrypted_message = f.encrypt(message.encode())
+    user_messages[username] = encrypted_message
+
+# Function to log in and add a message
+def login_and_add_message(username, password):
+    if username in users:
+        hashed_password = users[username]
+        if verify_password(password, hashed_password):
+            message = input("Enter your message: ")
+            add_message(username, message)
+            print("Message added successfully.")
+        else:
+            print("Invalid password.")
+    else:
+        print("Invalid username.")
+
+
 # Main program
 users = {}
 user_messages = {}
@@ -54,8 +73,8 @@ key = Fernet.generate_key()
 f = Fernet(key)
 
 while True:
-    print(cs("\n1. Create Account\n2. Login\n3. Exit", "yellow"))
-    choice = input(cs("Enter your choice: ", "green"))
+    print("\n1. Create Account\n2. Login\n3. Add Message\n4. Exit")
+    choice = input("Enter your choice: ")
 
     if choice == "1":
         username = input("Enter username: ")
@@ -68,6 +87,11 @@ while True:
         login(username, password)
 
     elif choice == "3":
+        username = input("Enter username: ")
+        password = input("Enter password: ")
+        login_and_add_message(username, password)
+
+    elif choice == "4":
         print("Exiting program.")
         break
 
