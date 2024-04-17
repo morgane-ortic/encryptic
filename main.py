@@ -45,7 +45,7 @@ def login():
         clear()
         print("Login successful!")
         time.sleep(2)
-        print("\nWelcome, " + username_login + "!")  # Example of concatenation
+        print(f"\nWelcome, {username_login} !")  # Example of concatenation
         time.sleep(2)
         clear()
     else:
