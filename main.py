@@ -9,9 +9,11 @@ username = ""
 password = ""
 credentials = []
 
+lower = str.lower
+
 # Functions
 def register():
-    username = input("Enter a new username: ")
+    username = input(lower("Enter a new username: "))
     password = input("Enter a new password: ")
     credentials.append(username)
     credentials.append(password)
