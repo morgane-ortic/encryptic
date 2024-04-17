@@ -22,6 +22,7 @@ def hash_password(password):
 
 # Function to log in and retrieve encrypted message
 def login(username, password):
+    username = username.lower()  # Convert username to lowercase
     if username in users:
         hashed_password = users[username]
         # Check if the hashed password matches the stored hashed password
@@ -37,6 +38,7 @@ def login(username, password):
             print("Invalid password.")
     else:
         print("Invalid username.")
+
 
 # Function to verify a password
 def verify_password(password, hashed_password):
