@@ -14,13 +14,15 @@ passwords = ""
 messages = ""
 credentials = []
 
+lower = str.lower
+
 #======================================================================================================
 # Functions:
 # Function that lets you register a new account
 def register():
     global usernames, passwords, messages
 
-    usernames = input(cs("Enter a new username: ", "cyan")) 
+    usernames = input(lower(cs("Enter a new username: ", "cyan")) )
     passwords = input(cs("Enter a new password: ", "cyan"))   
     clear()
     messages = input(f"Hi {cs(usernames.title(), 'cyan')}, enter the message you want to encrypt: ")
