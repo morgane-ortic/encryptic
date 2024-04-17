@@ -9,11 +9,11 @@ username = ""
 password = ""
 credentials = []
 
-lower = str.lower
 
 # Functions
+# Function to register a new account
 def register():
-    username = input(lower("Enter a new username: "))
+    username = input("Enter a new username: ")
     password = input("Enter a new password: ")
     credentials.append(username)
     credentials.append(password)
@@ -39,6 +39,7 @@ def register():
     clear()
     login()
 
+# Function to login to an existing account
 def login():
     username_login = input("Enter your login username: ")
     password_login = input("Enter your password: ")
@@ -72,3 +73,4 @@ while choice != 'register' or 'login':
         clear()
         login()
         break
+
