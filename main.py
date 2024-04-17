@@ -14,9 +14,8 @@ passwords = ""
 messages = ""
 credentials = []
 
-
 #======================================================================================================
-# Functions:
+# Functions::
 # Function that lets you register a new account
 def register():
     global usernames, passwords, messages
