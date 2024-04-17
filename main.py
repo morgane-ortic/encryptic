@@ -13,8 +13,7 @@ password = ""
 message = ""
 credentials = []
 
-
-# Functions
+# Functions:
 # Function to register a new account
 def register():
     global username, password, encMessage, fernet
@@ -23,17 +22,10 @@ def register():
     password = input(cs("Enter a password: ", "cyan"))
     message = input(f"Hi {cs(username.title(), 'cyan')}, enter the message you want to encrypt: ")
     
-# generate a key for encryption and decryption
-# You can use fernet to generate 
-# the key or use random key generator
-# here using fernet to generate key
-    key = Fernet.generate_key()
-# Instance the Fernet class with the key
-    fernet = Fernet(key)
-# then use the Fernet class instance 
-# to encrypt the string string must
-# be encoded to byte string before encryption
-    encMessage = fernet.encrypt(message.encode())
+    key = Fernet.generate_key() # Using Fernet to generate a key (any other key generator could be used as well)
+    fernet = Fernet(key)        # We tell the Fernet class to use the key we generated
+    # to encrypt the string string must be encoded to byte string before encryption
+    encMessage = fernet.encrypt(message.encode())             # Encrypt the message
     credentials.append(username)
     credentials.append(password)
     clear()
