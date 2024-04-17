@@ -14,7 +14,17 @@
     </head>
     <body>
         <h1>Registration Page</h1>
+
+        <form action="{{ url_for('register') }}" method="POST">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+            <button type="submit">Register</button>
+        </form>
+
         <a href="{{ url_for('login') }}">Already have an account? Click here to login</a> <!-- This is the link to the login page -->
+        
         <script src="" async defer></script>
     </body>
 </html>
