@@ -4,6 +4,7 @@ from stringcolor import cs
 
 # Function to create a new user account
 def create_user(username, password):
+    username = username.lower()  # Convert username to lowercase
     # Hash the password
     hashed_password = hash_password(password)
     # Store username and hashed password
@@ -54,6 +55,7 @@ def add_message(username, message):
 
 # Function to log in and add a message
 def login_and_add_message(username, password):
+    username = username.lower()
     if username in users:
         hashed_password = users[username]
         if verify_password(password, hashed_password):
