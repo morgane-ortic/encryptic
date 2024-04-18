@@ -86,7 +86,7 @@ def login():
 
 #======================================================================================================
 # This is where the program starts. Registration and login functions are called here.
-print("Welcome to the encryptian program. \n")
+print("Welcome to the encryption program. \n")
 time.sleep(1)
 
 # Ask the user if they want to register or login
