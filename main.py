@@ -4,8 +4,8 @@ from cryptography.fernet import Fernet  #imports the Fernet class from the crypt
 from stringcolor import cs              #imports the stringcolor module, which allows us to use colors in the terminal                    
 import mysql.connector                  #imports the required function that allows Python to connect to MySQL.
 
-clear = lambda: os.system('clear')
-clear()
+clear = lambda: os.system('clear') # define a "clear" function that clears the terminal from previous lines
+clear() # call the clear function to clear the terminal
 
 #Global variables
 decrypted = False
