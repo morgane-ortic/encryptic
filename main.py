@@ -14,6 +14,7 @@ passwords = ""
 messages = ""
 credentials = []
 
+'''
 #======================================================================================================
 # Functions::
 # Function that lets you register a new account
