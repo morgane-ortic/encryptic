@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
+from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 
 
@@ -26,9 +26,9 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(80), nullable=False)
 
 class RegisterForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Sign Up')
+    username = StringField('Username', validators=[InputRequired(), Length(min=2, max=20)])
+    password = PasswordField('Password', validators=[InputRequired()])
+    submit = SubmitField('Register')
 
     def validate_username(self, username):
         existing_user = User.query.filter_by(username=username.data).first()
@@ -36,8 +36,8 @@ class RegisterForm(FlaskForm):
             raise ValidationError('That username is taken. Please choose a different one.')
 
 class loginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-    password = PasswordField('Password', validators=[DataRequired()])
+    username = StringField('Username', validators=[InputRequired(), Length(min=2, max=20)])
+    password = PasswordField('Password', validators=[InputRequired()])
     submit = SubmitField('Login')
 
 
@@ -68,11 +68,11 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        new_user = User(username=form.username.data, password=hashed_password)
-        print(new_user)
-        db.session.add(new_user)
+        user = User(username=form.username.data, password=hashed_password)
+        print(user)
+        db.session.add(user)
         db.session.commit()
-        return '<h1>Account created for {form.username.data}!</h1>'
+        return redirect(url_for('login'))
     print("hello")
     return render_template('register.html', form=form)
 
