@@ -87,22 +87,26 @@ def decryption():
 # Login as a registered user to decrypt message
 def login():
     global decrypted
+    # Load data from the json file
+    with open(FILE_PATH, 'r') as input_file:
+        data = json.load(input_file)
     while decrypted == False: # keep asking this input until messge is decrypted
         name_input = input("What\'s your name? ") # ask for username
-        if name_input == username and decrypted == False: # if name is correct, keep asking this until message is decrypted
-            while True: 
-                time.sleep(2)
-                password_input = input(f"Hello, {username}. Please enter your password: ") # ask for password
-                if password_input == password:
+        for user in data: # Check if the entered username exists in the data
+            if user['username'] == name_input and decrypted == False: # if name is correct, keep asking this until message is decrypted
+                while True: 
                     time.sleep(2)
-                    decrypted = True # define that the message is decrypted = stop asking for username
-                    decryption() # call decryption function that decrypts message
-                    break
-                # If password is wrong, print an error message
-                else:
-                    time.sleep(2)
-                    print("This is not the password >:(")
-
+                    password_input = input(f"Hello, {username}. Please enter your password: ") # ask for password
+                    if user['password'] == password_input:
+                        time.sleep(2)
+                        decrypted = True # define that the message is decrypted = stop asking for username
+                        decryption() # call decryption function that decrypts message
+                        break
+                    # If password is wrong, print an error message
+                    else:
+                        time.sleep(2)
+                        print("This is not the password >:(")
+            break
 
 
 #======================================================================================================
