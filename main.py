@@ -2,6 +2,7 @@ import time # import the time library that we will use lter in the code
 import os # import the os library
 from cryptography.fernet import Fernet # import fernet from the cryptography library, used for encryption and decryption
 from stringcolor import cs # import cs from the stringcolor library
+import json
 
 clear = lambda: os.system('clear') # define a "clear" function that clears the terminal from previous lines
 clear() # call the clear function to clear the terminal
@@ -13,7 +14,9 @@ decrypted = False # define that the decryption process hasn't happened yet.
 username = ""
 password = ""
 message = ""
-credentials = []
+credentials = {}
+
+FILE_PATH = './users.json'
 
 # Functions
 # Register a new user, password and message and encrypts the message:
@@ -32,8 +35,26 @@ def register():
     # store encoded message as a string in encMessage variable
     encMessage = fernet.encrypt(message.encode())
     # stores username and password to the credentials list we created earlier
-    credentials.append(username)
-    credentials.append(password)
+
+    credentials['username'] = username
+    credentials['password'] = password
+
+    # Check if the file exists and is not empty
+    if os.path.exists(FILE_PATH) and os.stat(FILE_PATH).st_size != 0:
+        with open(FILE_PATH, 'r') as input_file:
+            data = json.load(input_file)
+            # If data is a dictionary, convert it to a list
+            if isinstance(data, dict):
+                data = [data]
+            data.append(credentials)
+    else:
+        # If the file doesn't exist or is empty, start a new list
+        data = [credentials]
+
+    # Write the data to the file
+    with open(FILE_PATH, 'w') as output_file:
+        json.dump(data, output_file, indent=2)
+
     clear() # clear the terminal
     print("Registration successful! \n") # let user know registration worked
     time.sleep(2) # give a 2 seconds break before next line
