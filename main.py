@@ -14,6 +14,7 @@ password = ""
 message = ""
 credentials = []
 
+'''
 #======================================================================================================
 # Database connection and operations
 # 1. Connect to the database
@@ -56,7 +57,7 @@ mydb.commit()  # Commit the transaction
 
 # 5. close the database connection when done
 mydb.close()
-
+'''
 #======================================================================================================
 # Functions:
 # Function to register a new account
