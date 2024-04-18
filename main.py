@@ -89,14 +89,18 @@ def login():
 print("Welcome to the encryptian program. \n")
 time.sleep(1)
 
-# Asks user for login or register and calls the appropriate function
-choice = input('Would you like to register or login? (register/login) \n', )
-while choice != 'register' or 'login':
-    if choice == 'register':
-        clear()
-        register()
-        break
-    elif choice == 'login':
-        clear()
+# Ask the user if they want to register or login
+# calling functions Register or Login accordingly
+while True:  # keep asking until a valid choice is given
+    choice = input("Would you like to register or login? (register/login) \n")
+    # call login function if login is typed
+    if choice.lower() == 'login': # use lower method so it accepts login with different capitalisation
         login()
-        break
+        break  # exit the loop once a valid choice is given
+    # call register function if register is typed
+    elif choice.lower() == 'register': # 
+        register()
+        break  # exit the loop once a valid choice is given
+    # print error message if user enters something else
+    else:
+        print("Invalid choice. Please enter either 'login' or 'register'.")
