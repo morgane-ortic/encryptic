@@ -1,102 +1,95 @@
-import time
-import os
-from cryptography.fernet import Fernet
-from stringcolor import cs
+import time # import the time library that we will use lter in the code
+import os # import the os library
+from cryptography.fernet import Fernet # import fernet from the cryptography library, used for encryption and decryption
+from stringcolor import cs # import cs from the stringcolor library
 
-clear = lambda: os.system('clear')
-clear()
+clear = lambda: os.system('clear') # define a "clear" function that clears the terminal from previous lines
+clear() # call the clear function to clear the terminal
 
 #Global variables
-decrypted = False
+decrypted = False # define that the decryption process hasn't happened yet.
+# create empty variables that we will use to store the values we define later
+# It's not necessary in this code, but it's good practice and helps with readability
 username = ""
 password = ""
 message = ""
 credentials = []
 
-# Functions:
-# Function to register a new account
+# Functions
+# Register a new user, password and message and encrypts the message:
 def register():
-    global username, password, message
+    global username, password, encMessage, fernet # define these values as global, so that they are stored + can be used outside the function
 
-    username = input(cs("Enter a new username: ", "cyan")) 
-    password = input(cs("Enter a new password: ", "cyan"))   
-    clear()
+    #asks user for username, password and message and stores them in the variables created earlier
+    username = input(cs("Enter your name: ", "cyan"))
+    password = input(cs("Enter a password: ", "cyan"))
     message = input(f"Hi {cs(username.title(), 'cyan')}, enter the message you want to encrypt: ")
-    clear()
-    encryption()
-    print("Encrypting: ", end='', flush=True) 
-    print(show_letters(encMessage))       # print the encrypted string
-    time.sleep(2)
-    credentials.append(username) # Store the username and password in a list
+    
+    key = Fernet.generate_key() # generate a key for encryption and decryption using fernet
+    fernet = Fernet(key) # Instance the Fernet class with the key
+    # then use the Fernet class instance to encrypt the string
+    # string must be encoded to byte string before encryption
+    # store encoded message as a string in encMessage variable
+    encMessage = fernet.encrypt(message.encode())
+    # stores username and password to the credentials list we created earlier
+    credentials.append(username)
     credentials.append(password)
-    clear()
-    print("Registration successful! \n")
-    time.sleep(2)
-    clear()
+    clear() # clear the terminal
+    print("Registration successful! \n") # let user know registration worked
+    time.sleep(2) # give a 2 seconds break before next line
+    clear() # clear the terminal
+    # Loading screen redirecting to login function
     print("You can now login with your new account. \n")
-    print("Redirecting to login page", end='', flush=True)
-    print(show_letters('..........'), end='', flush=True)
+    print("Redirecting to login page", end='', flush=True) # display text letter by letter
+    time.sleep(0.2)
+    print(".", end='', flush=True)
+    time.sleep(0.2)
+    print(".", end='', flush=True)
+    time.sleep(0.2)
+    print(".", end='', flush=True)
+    time.sleep(0.2)
+    print(".", end='', flush=True)
+    time.sleep(0.2)
+    print(".", end='', flush=True)
+    time.sleep(0.2)
+    print(".", end='', flush=True)
     time.sleep(1)
     clear()
     login()
 
-# Function to login
+# decrypt the encrypted string with the Fernet instance of the key, that was used for encrypting the string
+# encoded byte string is returned by decrypt method, so we decode it to string with decode methods
+def decryption():
+    decMessage = fernet.decrypt(encMessage).decode() # decrypt message and stores it in clear in decMessage variable
+    print("decrypted string: ", decMessage) # print decrypted string
+
+# Login as a registered user to decrypt message
 def login():
     global decrypted
-    while decrypted == False:
-        name_input = input("What\'s your name? ")
-        clear()
-        if name_input == username and decrypted == False:
+    while decrypted == False: # keep asking this input until messge is decrypted
+        name_input = input("What\'s your name? ") # ask for username
+        if name_input == username and decrypted == False: # if name is correct, keep asking this until message is decrypted
             while True: 
-                password_input = input(f"Hello, {cs(username.title(), 'cyan')}. Please enter your password: ")
-                name_given = True
-                clear()
-                print("Loading encrypted message", end='', flush=True)
-                print(show_letters('..........'), end='', flush=True)
+                time.sleep(2)
+                password_input = input(f"Hello, {username}. Please enter your password: ") # ask for password
                 if password_input == password:
-                    decrypted = True
-                    decryption()
-                    break 
+                    time.sleep(2)
+                    decrypted = True # define that the message is decrypted = stop asking for username
+                    decryption() # call decryption function that decrypts message
+                    break
+                # If password is wrong, print an error message
                 else:
                     time.sleep(2)
-                    print("This is not the password >:()")
-        if name_input != username:
-            print("Non-existent username >:()")
-            print("\nWould you like to register? (yes/no)")
-            if input() == 'yes':
-                print("Redirecting to registration page", end='', flush=True)
-                clear()
-                register()
-            else:
-                clear()
-                print("Try logging in again.\n")
-                login()
-                
-# Function to encrypt the message
-def encryption():
-    global encMessage, fernet, message
-    key = Fernet.generate_key()     # Using Fernet to generate a key (any other key generator could be used as well)
-    fernet = Fernet(key)            # We tell the Fernet class to use the key we generated
-    encMessage = fernet.encrypt(message.encode()) # Encrypt the message / to encrypt the string it must be encoded to byte string before encryption
+                    print("This is not the password >:(")
 
-# Function to decrypt the message
-def decryption():                                    
-    decMessage = fernet.decrypt(encMessage).decode() # decrypting the encrypted string with the same Fernet instance that was used for encrypting the string
-    clear()                                          # encoded byte string is returned by decrypt method, so decode it to string with decode methods
-    print("decrypted string: ", decMessage)          # print the decrypted string
 
-# Function to show the letters one by one
-def show_letters(string):
-    for char in string:
-        time.sleep(0.03)
-        print(char, end=' ', flush=True)
-    return ''
-        
+
 #======================================================================================================
 # This is where the program starts. Registration and login functions are called here.
 print("Welcome to the encryptian program. \n")
 time.sleep(1)
 
+# Asks user for login or register and calls the appropriate function
 choice = input('Would you like to register or login? (register/login) \n', )
 while choice != 'register' or 'login':
     if choice == 'register':
@@ -107,4 +100,3 @@ while choice != 'register' or 'login':
         clear()
         login()
         break
-
