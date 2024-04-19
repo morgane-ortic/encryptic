@@ -21,7 +21,7 @@ FILE_PATH = './users.json'
 # Functions
 # Register a new user, password and message and encrypts the message:
 def register():
-    global username, password, encMessage, fernet # define these values as global, so that they are stored + can be used outside the function
+    global username, password, encMessage, encMessage_str, fernet # define these values as global, so that they are stored + can be used outside the function
 
     #asks user for username, password and message and stores them in the variables created earlier
     username = input(cs("Enter your name: ", "cyan"))
@@ -34,10 +34,11 @@ def register():
     # string must be encoded to byte string before encryption
     # store encoded message as a string in encMessage variable
     encMessage = fernet.encrypt(message.encode())
+    encMessage_str = encMessage.decode('utf-8')
     # stores username and password to the credentials list we created earlier
-
     credentials['username'] = username
     credentials['password'] = password
+    credentials['message'] = encMessage_str # converts our encrypted message from bytes to string to store it in json file
 
     # Check if the file exists and is not empty
     if os.path.exists(FILE_PATH) and os.stat(FILE_PATH).st_size != 0:
@@ -81,6 +82,16 @@ def register():
 # decrypt the encrypted string with the Fernet instance of the key, that was used for encrypting the string
 # encoded byte string is returned by decrypt method, so we decode it to string with decode methods
 def decryption():
+    # Load data from the json file
+    with open(FILE_PATH, 'r') as input_file:
+        data = json.load(input_file)
+    # check that there is a message associated to current user name
+    for user in data: # Check if the entered username exists in the data
+         # imports encrypted message string associated with username
+        if user['username'] == username:
+            encMessage_str = user['message']
+            break
+    encMessage = bytes(encMessage_str, 'utf-8') # Convert the encrypted message string back to bytes, in order to decrypt it
     decMessage = fernet.decrypt(encMessage).decode() # decrypt message and stores it in clear in decMessage variable
     print("decrypted string: ", decMessage) # print decrypted string
 
@@ -97,7 +108,7 @@ def login():
                 while True: 
                     time.sleep(2)
                     password_input = input(f"Hello, {username}. Please enter your password: ") # ask for password
-                    if user['password'] == password_input:
+                    if user['password'] == password_input: # Check if password matches with password in json file
                         time.sleep(2)
                         decrypted = True # define that the message is decrypted = stop asking for username
                         decryption() # call decryption function that decrypts message
