@@ -21,41 +21,42 @@ FILE_PATH = './users.json'
 # Functions
 # Register a new user, password and message and encrypts the message:
 def register():
-    global username, password, encMessage, encMessage_str, fernet # define these values as global, so that they are stored + can be used outside the function
-
-    #asks user for username, password and message and stores them in the variables created earlier
+    global username, password, fernet  # Define these variables as global
+    # Ask the user for username, password, and message
     username = input(cs("Enter your name: ", "cyan"))
     password = input(cs("Enter a password: ", "cyan"))
     message = input(f"Hi {cs(username.title(), 'cyan')}, enter the message you want to encrypt: ")
     
-    key = Fernet.generate_key() # generate a key for encryption and decryption using fernet
-    fernet = Fernet(key) # Instance the Fernet class with the key
-    # then use the Fernet class instance to encrypt the string
-    # string must be encoded to byte string before encryption
-    # store encoded message as a string in encMessage variable
+    # Generate a key for encryption and decryption using Fernet
+    key = Fernet.generate_key()
+    fernet = Fernet(key)  # Initialize Fernet with the key
+    
+    # Encrypt the message
     encMessage = fernet.encrypt(message.encode())
     encMessage_str = encMessage.decode('utf-8')
-    # stores username and password to the credentials list we created earlier
+    
+    # Store username, password, message, and key in the credentials dictionary
     credentials['username'] = username
     credentials['password'] = password
-    credentials['message'] = encMessage_str # converts our encrypted message from bytes to string to store it in json file
-
-    # Check if the file exists and is not empty
+    credentials['message'] = encMessage_str
+    credentials['key'] = key.decode('utf-8')  # Convert the key to a string and store it
+    
+    # Load existing data from the JSON file
     if os.path.exists(FILE_PATH) and os.stat(FILE_PATH).st_size != 0:
         with open(FILE_PATH, 'r') as input_file:
             data = json.load(input_file)
-            # If data is a dictionary, convert it to a list
-            if isinstance(data, dict):
+            if isinstance(data, dict):  # If data is a dictionary, convert it to a list
                 data = [data]
-            data.append(credentials)
     else:
-        # If the file doesn't exist or is empty, start a new list
-        data = [credentials]
-
-    # Write the data to the file
+        data = []  # If the file doesn't exist or is empty, start with an empty list
+    
+    data.append(credentials)  # Append the new credentials to the list
+    
+    # Write the data back to the JSON file
     with open(FILE_PATH, 'w') as output_file:
         json.dump(data, output_file, indent=2)
-
+        
+    
     clear() # clear the terminal
     print("Registration successful! \n") # let user know registration worked
     time.sleep(2) # give a 2 seconds break before next line
@@ -81,43 +82,33 @@ def register():
 
 # decrypt the encrypted string with the Fernet instance of the key, that was used for encrypting the string
 # encoded byte string is returned by decrypt method, so we decode it to string with decode methods
-def decryption():
-    # Load data from the json file
-    with open(FILE_PATH, 'r') as input_file:
-        data = json.load(input_file)
-    # check that there is a message associated to current user name
-    for user in data: # Check if the entered username exists in the data
-         # imports encrypted message string associated with username
-        if user['username'] == username:
-            encMessage_str = user['message']
-            break
-    encMessage = bytes(encMessage_str, 'utf-8') # Convert the encrypted message string back to bytes, in order to decrypt it
-    decMessage = fernet.decrypt(encMessage).decode() # decrypt message and stores it in clear in decMessage variable
-    print("decrypted string: ", decMessage) # print decrypted string
+def decryption(fernet, encMessage_str):
+    encMessage = bytes(encMessage_str, 'utf-8')
+    decMessage = fernet.decrypt(encMessage).decode()
+    print("decrypted string: ", decMessage)
 
-# Login as a registered user to decrypt message
 def login():
-    global decrypted
-    # Load data from the json file
+    global decrypted, username, password
     with open(FILE_PATH, 'r') as input_file:
         data = json.load(input_file)
-    while decrypted == False: # keep asking this input until messge is decrypted
-        name_input = input("What\'s your name? ") # ask for username
-        for user in data: # Check if the entered username exists in the data
-            if user['username'] == name_input and decrypted == False: # if name is correct, keep asking this until message is decrypted
+    while not decrypted:
+        name_input = input("What's your name? ")
+        for user in data:
+            if user['username'] == name_input and not decrypted:
                 while True: 
                     time.sleep(2)
-                    password_input = input(f"Hello, {username}. Please enter your password: ") # ask for password
-                    if user['password'] == password_input: # Check if password matches with password in json file
+                    password_input = input(f"Hello, {username}. Please enter your password: ")
+                    if user['password'] == password_input:
                         time.sleep(2)
-                        decrypted = True # define that the message is decrypted = stop asking for username
-                        decryption() # call decryption function that decrypts message
+                        fernet = Fernet(user['key'])  # Initialize Fernet with the user's key
+                        decrypted = True
+                        decryption(fernet, user['message'])  # Pass the fernet instance and the encrypted message to decryption function
                         break
-                    # If password is wrong, print an error message
                     else:
                         time.sleep(2)
                         print("This is not the password >:(")
             break
+
 
 
 #======================================================================================================
