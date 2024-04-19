@@ -4,6 +4,7 @@ from cryptography.fernet import Fernet # import fernet from the cryptography lib
 from stringcolor import cs # import cs from the stringcolor library
 import json
 from flask_bcrypt import Bcrypt
+import datetime
 
 clear = lambda: os.system('clear') # define a "clear" function that clears the terminal from previous lines
 clear() # call the clear function to clear the terminal
@@ -29,6 +30,9 @@ def register():
     password = input(cs("Enter a password: ", "cyan"))
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8') # Hash the password
     message = input(f"Hi {cs(username.title(), 'cyan')}, enter the message you want to encrypt: ")
+    
+    # Add datetime to message
+    message += f"\n\nMessage created at: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
     
     # Generate a key for encryption and decryption using Fernet
     key = Fernet.generate_key()
@@ -97,7 +101,7 @@ def login():
     while not decrypted:
         name_input = input("What's your name? ")
         for user in data:
-            if user['username'] == name_input and not decrypted: # Check if the username exists in the data
+            if user['username'].lower() == name_input.lower() and not decrypted: # Check if the username exists in the data (case-insensitive)
                 while True: # Keep asking for the password until the correct one is entered
                     time.sleep(2)
                     password_input = input(f"Hello, {username}. Please enter your password: ")
