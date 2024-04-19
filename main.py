@@ -62,7 +62,7 @@ def login():
         if name_input != usernames:
             print(cs("Non-existent username >:()", "red"))
             print("\nWould you like to register? (yes/no)")
-            if input() == 'yes':
+            if input().lower().startswith('y'):
                 print("Redirecting to registration page", end='', flush=True)
                 clear()
                 register()
