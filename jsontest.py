@@ -3,6 +3,7 @@ import os # import the os library
 from cryptography.fernet import Fernet # import fernet from the cryptography library, used for encryption and decryption
 from stringcolor import cs # import cs from the stringcolor library
 import json
+from flask_bcrypt import Bcrypt
 
 clear = lambda: os.system('clear') # define a "clear" function that clears the terminal from previous lines
 clear() # call the clear function to clear the terminal
@@ -11,6 +12,7 @@ clear() # call the clear function to clear the terminal
 decrypted = False # define that the decryption process hasn't happened yet.
 # create empty variables that we will use to store the values we define later
 # It's not necessary in this code, but it's good practice and helps with readability
+bcrypt = Bcrypt()
 username = ""
 password = ""
 message = ""
@@ -25,6 +27,7 @@ def register():
     # Ask the user for username, password, and message
     username = input(cs("Enter your name: ", "cyan"))
     password = input(cs("Enter a password: ", "cyan"))
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8') # Hash the password
     message = input(f"Hi {cs(username.title(), 'cyan')}, enter the message you want to encrypt: ")
     
     # Generate a key for encryption and decryption using Fernet
@@ -37,7 +40,7 @@ def register():
     
     # Store username, password, message, and key in the credentials dictionary
     credentials['username'] = username
-    credentials['password'] = password
+    credentials['password'] = hashed_password
     credentials['message'] = encMessage_str
     credentials['key'] = key.decode('utf-8')  # Convert the key to a string and store it
     
@@ -88,7 +91,7 @@ def decryption(fernet, encMessage_str):
     print("decrypted string: ", decMessage)
 
 def login():
-    global decrypted, username, password
+    global decrypted, username, password, fernet
     with open(FILE_PATH, 'r') as input_file:
         data = json.load(input_file)
     while not decrypted:
@@ -98,7 +101,8 @@ def login():
                 while True: 
                     time.sleep(2)
                     password_input = input(f"Hello, {username}. Please enter your password: ")
-                    if user['password'] == password_input:
+                    hashed_password = user['password']
+                    if bcrypt.check_password_hash(hashed_password, password_input):
                         time.sleep(2)
                         fernet = Fernet(user['key'])  # Initialize Fernet with the user's key
                         decrypted = True
