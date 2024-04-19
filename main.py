@@ -134,19 +134,19 @@ def login():
                         print("This is not the password >:(")
             break
 
-def logout():
+def logout(): # Function to log out the user
     global fernet, username
     fernet = None
     username = ""
     print("You have been logged out.")
 
-def display_messages():
+def display_messages(): # Function to display messages
     global username, data, fernet
     if not fernet:
         print("You need to log in first to access your messages.")
         return
 
-    for user in data:
+    for user in data: # Find the user in the data
         if user['username'].lower() == username.lower():
             if 'messages' in user:  # Check if 'messages' key exists in the user dictionary
                 for encMessage_str in user['messages']:  # Decrypt and display each message individually
@@ -159,21 +159,21 @@ def display_messages():
             return
 
 
-def add_message():
+def add_message(): # Function to add a message
     global username, data, fernet
-    if not fernet:
+    if not fernet: # Check if the user is logged in
         print("You need to log in first to add a message.")
         return
 
     new_message = input("Enter the message you want to add: ")
     new_message += f"\n\nMessage created at: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
 
-    for user in data:
+    for user in data: # Find the user in the data
         if user['username'].lower() == username.lower():
             user['messages'].append(fernet.encrypt(new_message.encode()).decode('utf-8'))
             break
 
-    with open(FILE_PATH, 'w') as output_file:
+    with open(FILE_PATH, 'w') as output_file: # Write the updated data back to the JSON file
         json.dump(data, output_file, indent=2)
 
     print("Message added successfully!")
