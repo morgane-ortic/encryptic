@@ -39,14 +39,14 @@ def register():
     encMessage_str = encMessage.decode('utf-8')
     
     # Store username, password, message, and key in the credentials dictionary
-    credentials['username'] = username
-    credentials['password'] = hashed_password
-    credentials['message'] = encMessage_str
+    credentials['username'] = username 
+    credentials['password'] = hashed_password # Store the hashed password
+    credentials['message'] = encMessage_str # Store the encrypted message
     credentials['key'] = key.decode('utf-8')  # Convert the key to a string and store it
     
     # Load existing data from the JSON file
     if os.path.exists(FILE_PATH) and os.stat(FILE_PATH).st_size != 0:
-        with open(FILE_PATH, 'r') as input_file:
+        with open(FILE_PATH, 'r') as input_file: # Open the JSON file in read mode
             data = json.load(input_file)
             if isinstance(data, dict):  # If data is a dictionary, convert it to a list
                 data = [data]
@@ -91,18 +91,18 @@ def decryption(fernet, encMessage_str):
     print("decrypted string: ", decMessage)
 
 def login():
-    global decrypted, username, password, fernet
-    with open(FILE_PATH, 'r') as input_file:
+    global decrypted, username, password, fernet # Define these variables as global
+    with open(FILE_PATH, 'r') as input_file: # Open the JSON file in read mode
         data = json.load(input_file)
     while not decrypted:
         name_input = input("What's your name? ")
         for user in data:
-            if user['username'] == name_input and not decrypted:
-                while True: 
+            if user['username'] == name_input and not decrypted: # Check if the username exists in the data
+                while True: # Keep asking for the password until the correct one is entered
                     time.sleep(2)
                     password_input = input(f"Hello, {username}. Please enter your password: ")
                     hashed_password = user['password']
-                    if bcrypt.check_password_hash(hashed_password, password_input):
+                    if bcrypt.check_password_hash(hashed_password, password_input): # Check if the password is correct
                         time.sleep(2)
                         fernet = Fernet(user['key'])  # Initialize Fernet with the user's key
                         decrypted = True
@@ -117,7 +117,7 @@ def login():
 
 #======================================================================================================
 # This is where the program starts. Registration and login functions are called here.
-print("Welcome to the encryptian program. \n")
+print("Welcome to the encryption program. \n")
 time.sleep(1)
 
 # Ask the user if they want to register or login
@@ -125,11 +125,11 @@ time.sleep(1)
 while True:  # keep asking until a valid choice is given
     choice = input("Would you like to register or login? (register/login) \n")
     # call login function if login is typed
-    if choice.lower() == 'login': # use lower method so it accepts login with different capitalisation
+    if choice.lower().startswith('l'): # check if the input starts with 'l' or 'L'
         login()
         break  # exit the loop once a valid choice is given
     # call register function if register is typed
-    elif choice.lower() == 'register': # 
+    elif choice.lower().startswith('r'): # 
         register()
         break  # exit the loop once a valid choice is given
     # print error message if user enters something else
