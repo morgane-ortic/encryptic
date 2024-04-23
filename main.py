@@ -22,8 +22,11 @@ credentials = {}
 FILE_PATH = './users.json'
 
 # Functions
+
+
+
 # Register a new user, password and message and encrypts the message:
-def register():
+def register_account():
     global username, password, fernet  # Define these variables as global
     # Ask the user for username, password, and message
     username = input(cs("Enter your name: ", "cyan"))
