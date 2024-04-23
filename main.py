@@ -180,47 +180,7 @@ def add_message(): # Function to add a message
         json.dump(data, output_file, indent=2)
 
     print("Message added successfully!")
-        
-# Function that connects to the database and inserts the data
-# def insert_info_in_database():
-#     mydb = mysql.connector.connect( #The mydb section configures the information for the database.
-#     host="localhost",
-#     user="roger",
-#     password="123",
-#     database="Warfare_Encryption_Tool"
-#     )
-
-#     mycursor = mydb.cursor() # mydb.cursor() is the function that allows the insertion of data into the database.
- 
-#     sql = "INSERT INTO user_accounts (usernames, passwords, messages) VALUES (%s, %s, %s)" # The sql line is our first MySQL query.
-#     val = (usernames, passwords, encMessages)                                                 # The val line defines our columns for the database.
-#     mycursor.execute(sql, val)                                                             # The mycursor.execute executes the above operations.
-#     mydb.commit()                                                                          # The mydb.commit() confirms the changes made by mycursor.execute. 
-#     print(cs("Uploading encrypted message:" , "yellow"), end='', flush=True)
-#     print(cs(30 * '.' , "yellow"), end='', flush=True)
-#     clear()
-#     print("Record uploaded.") # The print line prints output to indicate success or failure.
-    
-# Function that retrieves the data from the database
-# def retrieve_info_from_database():
-#     mydb = mysql.connector.connect(
-#     host="localhost",
-#     user="roger",
-#     password="123",
-#     database="Warfare_Encryption_Tool"
-#     )
-
-#     mycursor.execute("SELECT * FROM table_name WHERE condition")
-    
-#     # Fetch the result
-#     mycursor = mydb.cursor() # mydb.cursor() is the function that allows the insertion of data into the database.
-#     result = mycursor.fetchall()
-    
-#     # Process the result
-#     for row in result:
-#         print(row)
-
-# Function that shows string characters one by one
+           
 
 def show_letters(string):
     for char in string:
