@@ -218,6 +218,7 @@ def add_message(): # Function to add a message
 #         print(row)
 
 # Function that shows string characters one by one
+
 def show_letters(string):
     for char in string:
         time.sleep(0.03)
