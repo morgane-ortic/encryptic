@@ -12,8 +12,6 @@ passwords = ""
 messages = ""
 credentials = {}
 credentials1 = []
-key = Fernet.generate_key()
-fernet = Fernet(key)
 
 #======================================================================================================
 # Functions::
