@@ -11,7 +11,9 @@ usernames = ""
 passwords = ""
 messages = ""
 credentials = {}
-
+credentials1 = []
+key = Fernet.generate_key()
+fernet = Fernet(key)
 
 #======================================================================================================
 # Functions::
@@ -19,11 +21,11 @@ credentials = {}
 clear = lambda: os.system('clear') # define a "clear" function that clears the terminal from previous lines
 clear() # call the clear function to clear the terminal
 
-# Function that works as the main menu
+# Function that works as the main menu of the program (logical part of the main menu)
 def main_menu_logic():
     main_menu_ui()
-    loop_choice = ""
-    while loop_choice != 'login' or 'register' or 'exit' or '1' or '2' or '3':
+    main_menu_choice = ""
+    while main_menu_choice != 'login' or 'register' or 'exit' or '1' or '2' or '3':
         choice = input("Enter your choice: ").lower()
         clear()
         main_menu_ui()
@@ -41,9 +43,9 @@ def main_menu_logic():
             time.sleep(0.5)
             clear()
             exit()
-            break
+        break
 
-# Function that shows the main menu choices - User Interface
+# Function that shows the main menu choices - User Interface (Graphical part of the main menu)
 def main_menu_ui():
     print(cs("Welcome to the encryptian program. \n" , "blue"))
     print("╔" + "═" * 14 + "╗")
@@ -52,14 +54,13 @@ def main_menu_ui():
 
 # Function that lets you register a new account
 def register_account():
-    global usernames, passwords, messages, credentials
-    usernames = input((cs("Enter a new username: ", "cyan"))).lower()
+    global messages, usernames, passwords
+    usernames = input(cs("Enter a new username: ", "cyan"))
     passwords = input(cs("Enter a new password: ", "cyan"))   
-    credentials.append(usernames)
-    credentials.append(passwords)
+    credentials1.append(usernames)
+    credentials1.append(passwords)
     clear()
     initial_message = input('Would you like to enter an initial message? (yes/no): ').lower()
-    
     while initial_message == 'yes' or initial_message == 'no' or initial_message != 'yes' or initial_message != 'no':
         if not initial_message.strip():
             initial_message = input('Yes or no? ').lower()
@@ -70,7 +71,7 @@ def register_account():
             encryption_function()
             print(cs("Encrypting: ", "green"), end='', flush=True) 
             print(print_letters_appart(encMessages))       # print the encrypted string
-            # insert_info_in_database() MySQL database function / not in use
+            # insert_info_in_database() MySQL database function / not in use but works
             time.sleep(0.5)
             print(cs("\nMessage added!" , "yellow"))
             break
@@ -93,7 +94,7 @@ def register_account():
 
 # Function that lets you login to your account
 def loging_in():
-    global usernames, passwords, messages
+    global usernames, passwords
     while True:
         name_input = input(cs("Enter your username: ", "cyan"))
         if not name_input.strip():
@@ -112,7 +113,7 @@ def loging_in():
                 clear()
                 main_menu_logic()
 
-        passwords_input = input(f"Hello, {cs(name_input.title(), 'cyan')}. Please enter your password: ")
+        passwords_input = input(cs("Enter your password: ", "cyan"))
         if not passwords_input.strip():
             print("Password cannot be blank. Please try again.")
             time.sleep(1)
@@ -126,15 +127,59 @@ def loging_in():
             print(print_letters_appart(20 * '.'))
             time.sleep(0.5)
             clear()
-            break 
+            break
 
-# Function that works as the functional part of the program after logging in
+# Function that shows the choices after logging in - User Interface (Graphical part after logging in)
+def logged_in_menu_ui():
+    print(cs("Welcome to the encryptian program. \n" , "blue"))
+    print(cs(f"Logged in as: {usernames.title()}\n", "cyan"))
+    print("╔" + "═" * 22 + "╗")
+    print("║ 1. Display message   ║" , "\n║ 2. Add Message       ║" , "\n║ 3. Delete Message    ║")
+    print("║ 4. Log Out           ║" , "\n║ 5. Exit              ║")
+    print("╚" + "═" * 22 + "╝\n")
+
+# Function that works as the functional part of the program after logging in (Logical part after logging in)
 def logged_in_menu_logic():
-    global messages, encMessages
     logged_in_menu_ui()
-    choice2 = input("Enter your choice: ").lower()
-    while choice2 != 'log out' or 'enter a message' or 'show message' or 'exit' or '1' or '2' or '3' or '4':
-        if choice2 == 'log out' or choice2 == '1':
+    global messages, encMessages, decMessages
+    logged_in_choice = input("Enter your choice: ").lower()
+    while (logged_in_choice != 'display message' or 'add message' or 'delete message' or 
+           'log out' or 'exit' or '1' or '2' or '3' or '4' or '5'):
+        if logged_in_choice == 'display message' or logged_in_choice == '1':
+            clear()
+            decryption_function()
+            print(cs("Decrypting: ", " green"), end='', flush=True)
+            print(print_letters_appart(decMessages))
+            time.sleep(2)
+            clear()
+            logged_in_menu_logic()
+            break
+        elif logged_in_choice == 'add message: ' or logged_in_choice == '2':
+            clear()
+            print(cs("Enter a new message: ", "cyan"), end='', flush=True )
+            messages = input()
+            encryption_function()
+            print(cs("Encrypting: ", "green"), end='', flush=True) 
+            print(print_letters_appart(encMessages))
+            # insert_info_in_database() MySQL database function / not in use but it works
+            time.sleep(2)
+            clear()
+            logged_in_menu_logic()
+            break
+        elif logged_in_choice == 'delete message' or logged_in_choice == '3':
+            clear()
+            print(cs("Deleting message", "magenta"), end='', flush=True)
+            print(print_letters_appart(20 * '.'))
+            time.sleep(1.5)
+            clear()
+            messages = ""
+            print(cs("Message deleted", "yellow"), end='', flush=True)
+            print(print_letters_appart(20 * '.'))
+            time.sleep(1.5)
+            clear()
+            logged_in_menu_logic()
+            break
+        elif logged_in_choice == 'log out' or logged_in_choice == '4':
             clear()
             print(cs("Logging out", "magenta"), end='', flush=True)
             print(print_letters_appart(20 * '.'))
@@ -144,29 +189,7 @@ def logged_in_menu_logic():
             print(print_letters_appart('..........\n\n'))
             clear()
             main_menu_logic()
-            break
-        elif choice2 == 'enter a new message: ' or choice2 == '2':
-            clear()
-            print(cs("Enter a new message: ", "cyan"), end='', flush=True )
-            messages = input()
-            encryption_function()
-            print(cs("Encrypting: ", "green"), end='', flush=True) 
-            print(print_letters_appart(encMessages))
-            # insert_info_in_database() MySQL database function / not in use
-            time.sleep(2)
-            clear()
-            logged_in_menu_logic()
-            break
-        elif choice2 == 'show message' or choice2 == '3':
-            clear()
-            decryption_function()
-            print(cs("Decrypting: ", " green"), end='', flush=True)
-            print(print_letters_appart(decMessages))
-            time.sleep(2)
-            clear()
-            logged_in_menu_logic()
-            break
-        elif choice2 == 'exit' or choice2 == '4':
+        elif logged_in_choice == 'exit' or logged_in_choice == '5':
             clear()
             print(cs("Exiting program", "magenta") , end='', flush=True)
             print(print_letters_appart(20 * '.'))
@@ -174,23 +197,19 @@ def logged_in_menu_logic():
             clear()
             exit()
 
-# Function that shows the choices after logging in - User Interface
-def logged_in_menu_ui():
-    print(cs("Welcome to the encryptian program. \n" , "blue"))
-    print("╔" + "═" * 25 + "╗")
-    print("║ 1. Log out              ║" , "\n║ 2. Enter a new message  ║" , "\n║ 3. Show message         ║" , "\n║ 4. Exit                 ║")
-    print("╚" + "═" * 25 + "╝\n")
+        
 
 # Function that encrypts the message inputed by the user
 def encryption_function():
-    global encMessages, fernet, messages, key
+    global encMessages, key
     key = Fernet.generate_key()     # Using Fernet to generate a key (any other key generator could be used as well)
     fernet = Fernet(key)            # We tell the Fernet class to use the key we generated
     encMessages = fernet.encrypt(messages.encode()) # Encrypt the messages / to encrypt the string it must be encoded to byte string before encryption_function
 
 # Function that decrypts an encrypted message
-def decryption_function():                                    
+def decryption_function():  
     global decMessages, key
+    key = Fernet.generate_key() # Using Fernet to generate a key (any other key generator could be used as well)                  
     fernet = Fernet(key) # We tell the Fernet class to use the key we generated
     decMessages = fernet.decrypt(encMessages).decode() # decrypting the encrypted string with the same Fernet instance that was used for encrypting the string
 

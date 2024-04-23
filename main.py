@@ -1,55 +1,72 @@
-import time # import the time library that we will use lter in the code
-import os # import the os library
-from cryptography.fernet import Fernet # import fernet from the cryptography library, used for encryption and decryption
-from stringcolor import cs # import cs from the stringcolor library
-import json
-from flask_bcrypt import Bcrypt
-import datetime
+import time                             # allows us to use the sleep function to pause the program for a certain amount of time
+import os                               # allows us to use the clear function to clear the terminal
+from cryptography.fernet import Fernet  # allows us to use the Fernet class to encrypt and decrypt data
+from stringcolor import cs              # allows us to use the cs function to color the text
+import json                             # allows us to use the json library to work with JSON data
+from flask_bcrypt import Bcrypt         # allows us to use the Bcrypt class to hash passwords
+import datetime                         # allows us to use the datetime class to get the current date and time
 
-clear = lambda: os.system('clear') # define a "clear" function that clears the terminal from previous lines
-clear() # call the clear function to clear the terminal
-
+#======================================================================================================
 #Global variables
-decrypted = False # define that the decryption process hasn't happened yet.
-# create empty variables that we will use to store the values we define later
-# It's not necessary in this code, but it's good practice and helps with readability
-bcrypt = Bcrypt()
-username = ""
-password = ""
-message = ""
-credentials = {}
+decrypted = False                  # define that the decryption process hasn't happened yet.
+bcrypt = Bcrypt()                  # initialize the Bcrypt class, which we will use to hash passwords                             
+usernames = ""                     # creating empty global variables to store the usernames
+passwords = ""                     # creating empty global variables to store the passwords
+messages = []                      # creating an empty list to store the user's messages
+encMessages = ""                   # creating an empty variable to store the encrypted messages
+decMessages = ""                   # creating an empty variable to store the encrypted messages
+data = []                          # creating an empty list to store the user's data               
+credentials = {}                   # creating an empty dictionary to store the user's credentials
+fernet = None                      # creating an empty variable to store the Fernet instance
+key = Fernet.generate_key()        # generates a key using the Fernet class
+FILE_PATH = './users.json'         # define the path to the JSON file where we will store the user's data
 
-FILE_PATH = './users.json'
-
+#======================================================================================================
 # Functions
+# Defining a "clear" function that clears the terminal from previous lines
+clear = lambda: os.system('clear') # allows us to use the clear function so we can use the system command 'clear' to clear the terminal
 
+# Function that shows the main menu choices - User Interface (Only the grapchical part of the menu)part of the main menu
+def main_menu_ui(): # aligning the menu items so they look nice and printing them on the screen
+    print(cs("Welcome to the encryptian program. \n" , "blue"))
+    print("╔" + "═" * 14 + "╗")
+    print("║ 1. Login     ║" , "\n║ 2. Register  ║" , "\n║ 3. Exit      ║")
+    print("╚" + "═" * 14 + "╝\n")
 
-
-# Register a new user, password and message and encrypts the message:
+# Function that lets you register a new account
 def register_account():
-    global username, password, fernet  # Define these variables as global
-    # Ask the user for username, password, and message
-    username = input(cs("Enter your name: ", "cyan"))
-    password = input(cs("Enter a password: ", "cyan"))
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')  # Hash the password
-
-    messages = []  # Initialize an empty list to store messages
-
-    # Generate a key for encryption and decryption using Fernet
-    key = Fernet.generate_key()
-    fernet = Fernet(key)  # Initialize Fernet with the key
-
-    while True:
-        message = input(f"Hi {cs(username.title(), 'cyan')}, enter a message you want to encrypt (or type 'done' to finish): ")
-        if message.lower() == 'done':
-            break
+    usernames = input(cs("Enter your name: ", "cyan"))
+    passwords = input(cs("Enter a passwords: ", "cyan"))
+    hashed_passwords = bcrypt.generate_passwords_hash(passwords).decode('utf-8')  # Hash the password
+    clear()
+    initial_message = input('Would you like to enter an initial message? (yes/no): ').lower()
+    while initial_message == 'yes' or initial_message == 'no' or initial_message != 'yes' or initial_message != 'no':
+            if not initial_message.strip():
+                initial_message = input('Yes or no? ').lower()
+                time.sleep(1)
+            if initial_message == 'yes' and initial_message != 'no':
+                messages = input(f"Hi {cs(usernames.title(), 'cyan')}, enter the message you want to encrypt: ")
+                clear()
+                encryption_function()
+                print(cs("Encrypting: ", "green"), end='', flush=True) 
+                print(print_letters_appart(encMessages))       # print the encrypted string
+                # insert_info_in_database() MySQL database function / not in use
+                time.sleep(0.5)
+                print(cs("\nMessage added!" , "yellow"))
+                break
+            elif initial_message == 'no' and initial_message != 'yes':
+                clear()
+                break
+            else:
+                clear()
+                print("Would you like to input an initial message or not?.")
         message += f"\n\nMessage created at: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         messages.append(fernet.encrypt(message.encode()).decode('utf-8'))  # Encrypt and add the message to the list
 
     # Store username, password, messages, and key in the credentials dictionary
     credentials = {
-        'username': username,
-        'password': hashed_password,  # Store the hashed password
+        'usernames': usernames,
+        'passwords': hashed_passwords,  # Store the hashed password
         'messages': messages,
         'key': key.decode('utf-8')  # Convert the key to a string and store it
     }
@@ -92,7 +109,6 @@ def register_account():
     clear()
     login()
 
-
 # decrypt the encrypted string with the Fernet instance of the key, that was used for encrypting the string
 # encoded byte string is returned by decrypt method, so we decode it to string with decode methods
 def decryption(fernet, encMessage_str):
@@ -111,17 +127,17 @@ def load_user_data():
         data = []  # If the file doesn't exist or is empty, start with an empty list
 
 def login():
-    global decrypted, username, password, fernet, data  # Define these variables as global
+    global decrypted  # Define these variables as global
     load_user_data()  # Ensure data is loaded before login
     while not decrypted:
         name_input = input("What's your name? ")
         for user in data:
-            if user['username'].lower() == name_input.lower() and not decrypted:  # Check if the username exists in the data (case-insensitive)
+            if user['usernames'].lower() == name_input.lower() and not decrypted:  # Check if the username exists in the data (case-insensitive)
                 while True:  # Keep asking for the password until the correct one is entered
                     time.sleep(2)
-                    password_input = input(f"Hello, {username}. Please enter your password: ")
-                    hashed_password = user['password']
-                    if bcrypt.check_password_hash(hashed_password, password_input):  # Check if the password is correct
+                    passwords_input = input(f"Hello, {usernames}. Please enter your password: ")
+                    hashed_passwords = user['passwords']
+                    if bcrypt.check_passwords_hash(hashed_passwords, passwords_input):  # Check if the password is correct
                         time.sleep(2)
                         fernet = Fernet(user['key'])  # Initialize Fernet with the user's key
                         decrypted = True
@@ -137,20 +153,15 @@ def login():
                         print("This is not the password >:(")
             break
 
-def logout(): # Function to log out the user
-    global fernet, username
-    fernet = None
-    username = ""
-    print("You have been logged out.")
+
 
 def display_messages(): # Function to display messages
-    global username, data, fernet
     if not fernet:
         print("You need to log in first to access your messages.")
         return
 
     for user in data: # Find the user in the data
-        if user['username'].lower() == username.lower():
+        if user['usernames'].lower() == usernames.lower():
             if 'messages' in user:  # Check if 'messages' key exists in the user dictionary
                 for encMessage_str in user['messages']:  # Decrypt and display each message individually
                     decMessage = fernet.decrypt(bytes(encMessage_str, 'utf-8')).decode()
@@ -161,9 +172,7 @@ def display_messages(): # Function to display messages
                 print("No messages found.")
             return
 
-
 def add_message(): # Function to add a message
-    global username, data, fernet
     if not fernet: # Check if the user is logged in
         print("You need to log in first to add a message.")
         return
@@ -172,7 +181,7 @@ def add_message(): # Function to add a message
     new_message += f"\n\nMessage created at: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
 
     for user in data: # Find the user in the data
-        if user['username'].lower() == username.lower():
+        if user['usernames'].lower() == usernames.lower():
             user['messages'].append(fernet.encrypt(new_message.encode()).decode('utf-8'))
             break
 
@@ -181,17 +190,13 @@ def add_message(): # Function to add a message
 
     print("Message added successfully!")
            
-
 def show_letters(string):
     for char in string:
         time.sleep(0.03)
         print(char, end=' ', flush=True)
     return '' 
 
-#======================================================================================================
-# This is where the program starts. Registration and login functions are called here.
 def program():
-    global fernet
     fernet = None
     while True:
         print(cs("Welcome to the encryption program. \n", "blue"))
@@ -211,7 +216,7 @@ def program():
 
         elif choice == 'register' or choice == '2':
             clear()
-            register()
+            register_account()
 
         elif choice == 'display messages' or choice == '3':
             clear()
@@ -220,19 +225,33 @@ def program():
         elif choice == 'add message' or choice == '4':
             clear()
             add_message()
-
-        elif choice == 'logout' or choice == '5':
-            clear()
-            logout()
-
         elif choice == 'exit' or choice == '6':
             clear()
             print(cs("Exiting program", "magenta"))
             time.sleep(2)
             exit()
 
+# Function that encrypts the message inputed by the user
+def encryption_function():
+    fernet = Fernet(key)            # We tell the Fernet class to use the key we generated
+    encMessages = fernet.encrypt(messages.encode()) # Encrypt the messages / to encrypt the string it must be encoded to byte string before encryption_function
 
-# Call the program function to start the program
-program()
+# Function that decrypts an encrypted message
+def decryption_function():                                    
+    fernet = Fernet(key)
+    decMessages = fernet.decrypt(encMessages).decode() # decrypting the encrypted string with the same Fernet instance that was used for encrypting the string
+
+# Function that prints out string characters one by one
+def print_letters_appart(string):
+    for char in string:
+        time.sleep(0.03)
+        print(char, end=' ', flush=True)
+    return '' 
+
+#======================================================================================================
+# This is where the program starts. Registration and login functions are called here.
+
+clear()     # calling the clear function to clear the terminal at the start of the program
+program()   # Call the program function to start the program
 
 
