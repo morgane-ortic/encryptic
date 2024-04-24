@@ -1,4 +1,5 @@
 import requests # Import the requests library
+from stringcolor import cs
 
 def get_ip_address():
     # Make a request to get the user's IP address
@@ -26,7 +27,7 @@ def main():
     weather_data = get_weather_data(lat, lon, api_key) # Get the weather data
 
     # Display the weather data
-    print("Current Weather:")
+    print(cs("Current Weather:", "yellow"))
     print(f"Temperature: {weather_data['main']['temp']}°C")
     print(f"Weather: {weather_data['weather'][0]['main']}")
     print(f"Humidity: {weather_data['main']['humidity']}%")
