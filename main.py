@@ -7,8 +7,7 @@ import os                               # allows us to interact with the operati
 from cryptography.fernet import Fernet  # allows us to encrypt and decrypt data
 from flask_bcrypt import Bcrypt         # allows us to hash passwords
 from stringcolor import cs              # allows us to color the text in the terminal
-from app import User                    # allows us to work with the User class from the app.py file which helps us to hash passwords and check them
-import weather                       # allows us to work with the weather.py file which helps us to get the weather data
+import weather                          # allows us to work with the weather.py file which helps us to get the weather data
 
 #======================================================================================================
 #Global variables - variables that are used in multiple functions:: - we put them here to shorten the code and make the code more readable
