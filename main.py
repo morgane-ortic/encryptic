@@ -195,7 +195,7 @@ def logging_in():           # Function that lets you login to your account
 
 def logged_in_menu_ui():    # Function that shows the logged in menu choices - User Interface (Graphical part of the logged in menu) - ONLY PRINTING
     print(cs("Welcome to the encryption program. \n" , "blue"))
-    print( 'Hello ' , (cs(f"{name_input.title()}", "cyan")))
+    print( 'Hello ' , (cs(f"{name_input.title()} \n", "cyan")))
     weather.main()                                                          # call the weather.main() function to get the weather data
     print("\n")                                                             # print a new line 
     print("╔" + "═" * 22 + "╗")
