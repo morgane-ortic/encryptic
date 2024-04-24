@@ -247,8 +247,13 @@ def logged_in_menu_logic(): # Function that works as menu afterlogging in (logic
             time.sleep(1.5)
             clear()
             logged_in_menu_logic()                          # going back to the menu after showing that the code is under construction
-            break                                                      
-        elif logged_in_choice == 'log out' or logged_in_choice == '4':           # if the user enters 'log out' or '4' - the program will log out the user
+            break
+        elif logged_in_choice == 'delete account' or logged_in_choice == '4': # if the user enters 'delete account' or '4' - the program will log out the user
+            clear()                                                              #
+  
+            # Antons delte account functions comes here
+
+        elif logged_in_choice == 'log out' or logged_in_choice == '5':           # if the user enters 'log out' or '4' - the program will log out the user
             clear()                                                              #
             print(cs("Logging out", "magenta"), end='', flush=True)              #
             print(print_letters_appart(20 * '.'))                                #
