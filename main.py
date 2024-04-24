@@ -8,6 +8,7 @@ from cryptography.fernet import Fernet  # allows us to encrypt and decrypt data
 from flask_bcrypt import Bcrypt         # allows us to hash passwords
 from stringcolor import cs              # allows us to color the text in the terminal
 from app import User                    # allows us to work with the User class from the app.py file which helps us to hash passwords and check them
+import weather                       # allows us to work with the weather.py file which helps us to get the weather data
 
 #======================================================================================================
 #Global variables - variables that are used in multiple functions:: - we put them here to shorten the code and make the code more readable
@@ -30,6 +31,7 @@ JSON_FILE = './users.json'              # variable that stores the path to the J
 
 clear = lambda: os.system('clear')      # define a "clear" function that clears the terminal from previous lines
 clear()                                 # call the clear function to clear the terminal
+                          # call the main function from the weather.py file to get the weather data
 
 def main_menu_ui():         # Function that shows the main menu choices - User Interface (Graphical part of the main menu) - ONLY PRINTING
     print(cs("Welcome to the encryptian program. \n" , "blue"))             # print the welcome message
