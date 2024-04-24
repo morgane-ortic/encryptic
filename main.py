@@ -31,7 +31,6 @@ JSON_FILE = './users.json'              # variable that stores the path to the J
 
 clear = lambda: os.system('clear')      # define a "clear" function that clears the terminal from previous lines
 clear()                                 # call the clear function to clear the terminal
-                          # call the main function from the weather.py file to get the weather data
 
 def main_menu_ui():         # Function that shows the main menu choices - User Interface (Graphical part of the main menu) - ONLY PRINTING
     print(cs("Welcome to the encryptian program. \n" , "blue"))             # print the welcome message
