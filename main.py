@@ -34,7 +34,8 @@ clear()                                 # call the clear function to clear the t
 
 def main_menu_ui():         # Function that shows the main menu choices - User Interface (Graphical part of the main menu) - ONLY PRINTING
     print(cs("Welcome to the encryption program. \n" , "blue"))             # print the welcome message
-    print(weather.main(), "\n")                                      # get the weather data
+    weather.main()                                                          # call the weather.main() function to get the weather data
+    print("\n")                                                             # print a new line 
     print("╔" + "═" * 14 + "╗")                                             # print the top border of the main menu
     print("║ 1. Login     ║" , "\n║ 2. Register  ║" , "\n║ 3. Exit      ║") # print the choices of the main menu
     print("╚" + "═" * 14 + "╝\n")                                           # print the bottom border of the main menu
