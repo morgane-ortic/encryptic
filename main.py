@@ -249,7 +249,7 @@ def logged_in_menu_logic(): # Function that works as menu afterlogging in (logic
             print(print_letters_appart('..........\n\n'))                        #
             clear()                                                              # 
             main_menu_logic()                                                    # call the main_menu_logic function to show the choices after logging out
-        elif logged_in_choice == 'exit' or logged_in_choice == '5':              # if the user enters 'exit' or '5' - the program will stop running
+        elif logged_in_choice == 'exit' or logged_in_choice == '6':              # if the user enters 'exit' or '5' - the program will stop running
             clear()                                                              #
             print(cs("Exiting program", "magenta") , end='', flush=True)         #
             print(print_letters_appart(20 * '.'))                                #
@@ -296,12 +296,13 @@ def add_message_in_json(name_input, messages): # Function that adds a message to
 
 def delete_messages():     # Function that deletes the messages
     global name_input, messages_list
+    clear()
     print("Select the message you want to delete:")
     for i, message in enumerate(messages_list):
         print(f"{i+1}. {message}")
     choice = input("Enter the number of the message you want to delete (or 'q' to cancel): ")
     if choice == 'q':
-        return
+        logged_in_menu_logic()
     try:
         index = int(choice) - 1
         if index < 0 or index >= len(messages_list):
@@ -311,6 +312,9 @@ def delete_messages():     # Function that deletes the messages
             del messages_list[index]
             print("Message deleted successfully.")
             write_to_json()  # Update the JSON file with the modified messages list
+            time.sleep(2)
+            clear()
+            delete_messages()
     except ValueError:
         print("Invalid choice. Please try again.")
         delete_messages()    
