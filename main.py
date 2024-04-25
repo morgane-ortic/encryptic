@@ -236,24 +236,10 @@ def logged_in_menu_logic(): # Function that works as menu afterlogging in (logic
             break                                            
         elif logged_in_choice == 'delete message' or logged_in_choice == '3': # if the user enters 'delete message' or '3' - the program will allow the user to delete the message
             clear()                                         #
-            print('under construction')                     #
-                                                            #no actual code in the function yet, had no time to learn how
-            '''
-            print(cs("Deleting message", "magenta"), end='', flush=True)
-            print(print_letters_appart(20 * '.'))
-            time.sleep(1.5)
-            clear()
-            print(cs("Message deleted", "yellow"), end='', flush=True)
-            '''
-            time.sleep(1.5)
-            clear()
-            logged_in_menu_logic()                          # going back to the menu after showing that the code is under construction
-            break
+            delete_messages()                               # call the delete_messages function to delete the message
         elif logged_in_choice == 'delete account' or logged_in_choice == '4': # if the user enters 'delete account' or '4' - the program will log out the user
             clear()                                                              #
-  
-            # Antons delte account functions comes here
-
+            delete_account()                                                     # call the delete_account function to delete the account
         elif logged_in_choice == 'log out' or logged_in_choice == '5':           # if the user enters 'log out' or '4' - the program will log out the user
             clear()                                                              #
             print(cs("Logging out", "magenta"), end='', flush=True)              #
@@ -310,7 +296,7 @@ def add_message_in_json(name_input, messages): # Function that adds a message to
     write_to_json()                          # Write the data (aka the new message) to the JSON file
 
 # NOT WORKING - I DONT KNOW IF IT WORKS AT ALL
-def delete_message_from_json(name_input, messages): # Function that deletes a message from the JSON file
+"""def delete_message_from_json(name_input, messages): # Function that deletes a message from the JSON file
     global data                                     #
     for user in data:                               # Loop through the data list
         if user['username'] == name_input:          # If the username is the same as the logged in user's username
@@ -318,7 +304,29 @@ def delete_message_from_json(name_input, messages): # Function that deletes a me
                 user['messages'] = ""               # Delete the message
             else:                                   # If the user doesn't have messages
                 None                                # Do nothing
-    write_to_json()                                 # Write the data (aka the deleted message) to the JSON file
+    write_to_json() """                                # Write the data (aka the deleted message) to the JSON file
+
+def delete_messages():
+    global name_input, messages_list
+    print("Select the message you want to delete:")
+    for i, message in enumerate(messages_list):
+        print(f"{i+1}. {message}")
+    choice = input("Enter the number of the message you want to delete (or 'q' to cancel): ")
+    if choice == 'q':
+        return
+    try:
+        index = int(choice) - 1
+        if index < 0 or index >= len(messages_list):
+            print("Invalid choice. Please try again.")
+            delete_messages()
+        else:
+            del messages_list[index]
+            print("Message deleted successfully.")
+            write_to_json()  # Update the JSON file with the modified messages list
+    except ValueError:
+        print("Invalid choice. Please try again.")
+        delete_messages()    
+
 
 def encryption_function(): # Function that encrypts the message inputed by the user
     global messages, encMessages, fernet
@@ -339,5 +347,29 @@ def adding_date_to_message(): # Function that adds the date and time to the mess
     messages += f" - Message created at: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" # Add the date and time to the message
     messages_list.append(fernet.encrypt(messages.encode()).decode('utf-8'))                       # Encrypt and add the message to the list       
 
-#======================================================================================================
+def delete_account():
+    global name_input, data, JSON_FILE
+    while True:
+        confirmation = input("Are you sure you want to delete your account? (yes/no): ").lower()
+        if confirmation.startswith('y'):
+            data = [user for user in data if user['username'] != name_input]
+            write_to_json()
+            print(cs("Account deleted successfully!", "yellow"))
+            time.sleep(2)
+            clear()
+            print(cs("Redirecting to main menu", "orange"), end='', flush=True)
+            print(print_letters_appart(20 * '.'))
+            time.sleep(0.5)
+            clear()
+            main_menu_logic()
+            break
+        elif confirmation.startswith('n'):
+            clear()
+            logged_in_menu_logic()
+            break
+        else:
+            print("Invalid input. Please enter 'yes' or 'no'.")
+            time.sleep(1)
+            clear()
+
 main_menu_logic() # This is where the program starts.

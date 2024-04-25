@@ -10,5 +10,11 @@
     "password": "$2b$12$n2uxz2D8npdmhqG5QnGNIeOdkY8WaAEBFwLoaaROADoIBr0Dv0zr6",
     "messages": "testasdsad - Message created at: 2024-04-24 15:31:07",
     "key": "9cyoe_Fe-Glu3TaM-bcGTPLNowolkY5lc6gLZovlTIY="
+  },
+  {
+    "username": "delete",
+    "password": "$2b$12$MQrPw.XyBX/C7SoPWevXVuwQBywJkjqbwJstVAsGYi25nNnxDxNPe",
+    "messages": "delete this - Message created at: 2024-04-25 11:40:34\ndelete 2 - Message created at: 2024-04-25 11:40:56",
+    "key": "Ae06tG4X6Kti3cEPTtKAcHMJKaRdCvGgAH0_rjqgQIg="
   }
 ]
