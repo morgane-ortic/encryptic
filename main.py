@@ -7,7 +7,7 @@ import os                               # allows us to interact with the operati
 from cryptography.fernet import Fernet  # allows us to encrypt and decrypt data
 from flask_bcrypt import Bcrypt         # allows us to hash passwords
 from stringcolor import cs              # allows us to color the text in the terminal
-from app import User                    # allows us to work with the User class from the app.py file which helps us to hash passwords and check them
+import weather                          # allows us to work with the weather.py file which helps us to get the weather data
 
 #======================================================================================================
 #Global variables - variables that are used in multiple functions:: - we put them here to shorten the code and make the code more readable
@@ -32,7 +32,9 @@ clear = lambda: os.system('clear')      # define a "clear" function that clears 
 clear()                                 # call the clear function to clear the terminal
 
 def main_menu_ui():         # Function that shows the main menu choices - User Interface (Graphical part of the main menu) - ONLY PRINTING
-    print(cs("Welcome to the encryptian program. \n" , "blue"))             # print the welcome message
+    print(cs("Welcome to the encryption program. \n" , "blue"))             # print the welcome message
+    weather.main()                                                          # call the weather.main() function to get the weather data
+    print("\n")                                                             # print a new line 
     print("╔" + "═" * 14 + "╗")                                             # print the top border of the main menu
     print("║ 1. Login     ║" , "\n║ 2. Register  ║" , "\n║ 3. Exit      ║") # print the choices of the main menu
     print("╚" + "═" * 14 + "╝\n")                                           # print the bottom border of the main menu
@@ -172,14 +174,14 @@ def logging_in():           # Function that lets you login to your account
                     print("Yes or no?")                                  # print the message that the user needs to enter 'yes' or 'no'
                     time.sleep(1)                                        #
                     clear()                                              #
-                elif question == 'yes':                                  # if the user enters 'yes' - the program will allow the user to register
+                elif question.startswith("y"):                                  # if the user enters 'yes' - the program will allow the user to register
                     clear()                                              #
                     print("Redirecting to registration page", end='', flush=True) # print the message that the program is redirecting to the registration page
                     print(print_letters_appart(20 * '.'))                #
                     clear()                                              #
                     register_account()                                   # call the register_account function to allow the user to register
                     break                                                # break the loop when the user enters 'yes'
-                elif question == 'no':                                   # if the user enters 'no' - the program will not allow the user to register
+                elif question.startswith('n'):                                   # if the user enters 'no' - the program will not allow the user to register
                     clear()                                              #
                     print("Redirecting to main menu", end='', flush=True)# print the message that the program is redirecting to the main menu
                     print(print_letters_appart(20 * '.'))                #
@@ -192,11 +194,13 @@ def logging_in():           # Function that lets you login to your account
                     clear()                                              #
 
 def logged_in_menu_ui():    # Function that shows the logged in menu choices - User Interface (Graphical part of the logged in menu) - ONLY PRINTING
-    print(cs("Welcome to the encryptian program. \n" , "blue"))
-    print( 'Hello ' , (cs(f"{name_input.title()}", "cyan")))
+    print(cs("Welcome to the encryption program. \n" , "blue"))
+    print( 'Hello ' , (cs(f"{name_input.title()} \n", "cyan")))
+    weather.main()                                                          # call the weather.main() function to get the weather data
+    print("\n")                                                             # print a new line 
     print("╔" + "═" * 22 + "╗")
     print("║ 1. Display message   ║" , "\n║ 2. Add Message       ║" , "\n║ 3. Delete Message    ║")
-    print("║ 4. Log Out           ║" , "\n║ 5. Exit              ║")
+    print("║ 4. Delete Account    ║" , "\n║ 5. Log out           ║" , "\n║ 6. Exit              ║")
     print("╚" + "═" * 22 + "╝\n")
 
 def logged_in_menu_logic(): # Function that works as menu afterlogging in (logical part of the logged in menu) 
@@ -243,8 +247,13 @@ def logged_in_menu_logic(): # Function that works as menu afterlogging in (logic
             time.sleep(1.5)
             clear()
             logged_in_menu_logic()                          # going back to the menu after showing that the code is under construction
-            break                                                      
-        elif logged_in_choice == 'log out' or logged_in_choice == '4':           # if the user enters 'log out' or '4' - the program will log out the user
+            break
+        elif logged_in_choice == 'delete account' or logged_in_choice == '4': # if the user enters 'delete account' or '4' - the program will log out the user
+            clear()                                                              #
+  
+            # Antons delte account functions comes here
+
+        elif logged_in_choice == 'log out' or logged_in_choice == '5':           # if the user enters 'log out' or '4' - the program will log out the user
             clear()                                                              #
             print(cs("Logging out", "magenta"), end='', flush=True)              #
             print(print_letters_appart(20 * '.'))                                #

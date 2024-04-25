@@ -1,16 +1,14 @@
 [
   {
-    "username": "Morgi",
-    "password": "Lu",
-    "message": "gAAAAABmImzFepw53V5gB5XaxwKiNIjiyTBisOgXOHYVNneMmVsjsGQeXbA_QF4Dgs_8sxbFDM438NAPS2kWAApP1VU_NLRIAA==",
-    "key": "ybYWBzhYRoqwIkV7pkzjH1NS_Stt6gZZRE7ZAWdO-yI="
+    "username": "banana",
+    "password": "$2b$12$FPWcjX.aRMd/LzpN2Sr8IO9h7sNSnNrQrGIFelLql0qQhU39I84ny",
+    "messages": "super duper - Message created at: 2024-04-24 09:05:44",
+    "key": "m-Xp8fe4fpu1bXRaWGN8zKYfu5KKeDnCO-ZTw7FKFjo="
   },
   {
-    "username": "Lu",
-    "password": "$2b$12$Art21tCeMZx9sHsY811k1eHpH9gIlyXnmt0DJhbMvEeKT.ZGX5q.e",
-    "messages": [
-      "gAAAAABmJ62p6B8vrcZ0VSrLKic_mMscoWNDPEAtgPjgl_jndbhsQqQzgqSTze6sCsw2HxQ_A52Lr2ylZrZ_v3UCsV4vrF8U8eCu3fYzYzqQolnNnXP7HPgBXM9m9dSgJeyMzpV5_VNLGtb222yN-qMkXBSKAe_zaw=="
-    ],
-    "key": "DWBu1jpGiY3JK1AggZ1EUrqKOEFecTk1via1QO9ewLs="
+    "username": "tets",
+    "password": "$2b$12$n2uxz2D8npdmhqG5QnGNIeOdkY8WaAEBFwLoaaROADoIBr0Dv0zr6",
+    "messages": "testasdsad - Message created at: 2024-04-24 15:31:07",
+    "key": "9cyoe_Fe-Glu3TaM-bcGTPLNowolkY5lc6gLZovlTIY="
   }
 ]
