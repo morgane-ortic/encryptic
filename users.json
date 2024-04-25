@@ -18,9 +18,16 @@
     "key": "Ae06tG4X6Kti3cEPTtKAcHMJKaRdCvGgAH0_rjqgQIg="
   },
   {
+<<<<<<< HEAD
     "username": "anton",
     "password": "$2b$12$zg.M5NSMVoVogtcMdJ1NM.AHHHrXWVWMxnTCZsx3qjF9Rh92s2hOy",
     "messages": "weqw - Message created at: 2024-04-25 13:46:40",
     "key": "fdgbRsrifiRBBTtkrZTmUM-d3HslJlgex4WPi6T4PfU="
+=======
+    "username": "whatsup1",
+    "password": "$2b$12$nIvvk4MtIpYIQGKEmgnZHu0ROmwU8FrgmYYgTebFFu.2qM0t6sHZi",
+    "messages": "hello - Message created at: 2024-04-25 13:29:51\nthis is a 2nd test - Message created at: 2024-04-25 13:30:15\nanother one (dj khaled) - Message created at: 2024-04-25 13:30:37\nanother - Message created at: 2024-04-25 13:33:55\ntestingplease - Message created at: 2024-04-25 13:34:02\nyolo - Message created at: 2024-04-25 13:38:36\nyoloooo - Message created at: 2024-04-25 13:38:44",
+    "key": "mRsLo2sKFmaRGbTYRDq6Hzv0XruwnImcZyK-kyCnkiw="
+>>>>>>> 8d39e93b7aa11f45fef13e424d8c2e84924d2663
   }
 ]
