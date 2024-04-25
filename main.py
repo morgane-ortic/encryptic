@@ -200,7 +200,7 @@ def logged_in_menu_ui():    # Function that shows the logged in menu choices - U
     print("\n")                                                             # print a new line 
     print("╔" + "═" * 22 + "╗")
     print("║ 1. Display message   ║" , "\n║ 2. Add Message       ║" , "\n║ 3. Delete Message    ║")
-    print("║ 4. Log Out           ║" , "\n║ 5. Exit              ║")
+    print("║ 4. Delete Account    ║" , "\n║ 5. Log out           ║" , "\n║ 6. Exit              ║")
     print("╚" + "═" * 22 + "╝\n")
 
 def logged_in_menu_logic(): # Function that works as menu afterlogging in (logical part of the logged in menu) 
