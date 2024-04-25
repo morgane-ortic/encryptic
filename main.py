@@ -99,7 +99,7 @@ def register_account():     # Function that lets you register a new account
             print('Yes or no? ')                                          #
             time.sleep(1)                                                 #
             clear()                                                       #
-        if initial_message.startswith('y'):                                      # if the user enters 'yes' - the program will allow the user to enter a message
+        if initial_message == 'yes':                                      # if the user enters 'yes' - the program will allow the user to enter a message
             clear()                                                       #
             messages = input(f"Hi {cs(usernames.title(), 'cyan')}, enter the message you want to encrypt: ") # ask the user to enter a message
             adding_date_to_message()                                      # add the date and time to the message
@@ -109,7 +109,7 @@ def register_account():     # Function that lets you register a new account
             print(print_letters_appart(encMessages))                      # print the dots separately to make the program look like it's encrypting the message and loading
             print(cs("\nMessage added!" , "yellow"))                      #
             break                                                         # break the loop when the user enters a valid message
-        elif initial_message.startswith('n'):                                     # if the user enters 'no' - the program will not allow the user to enter a message
+        elif initial_message == 'no':                                     # if the user enters 'no' - the program will not allow the user to enter a message
             clear()                                                       #
             break                                                         # break the loop when the user enters 'no'
         elif initial_message != 'yes' or initial_message != 'no':         # if the user enters something other than 'yes' or 'no'
@@ -195,7 +195,7 @@ def logging_in():           # Function that lets you login to your account
 
 def logged_in_menu_ui():    # Function that shows the logged in menu choices - User Interface (Graphical part of the logged in menu) - ONLY PRINTING
     print(cs("Welcome to the encryption program. \n" , "blue"))
-    print( 'Hello ' , (cs(f"{name_input.title()} \n", "cyan")))
+    print( 'Logged in as:' , (cs(f"{name_input.title()} \n", "cyan")))
     weather.main()                                                          # call the weather.main() function to get the weather data
     print("\n")                                                             # print a new line 
     print("╔" + "═" * 22 + "╗")
@@ -227,8 +227,10 @@ def logged_in_menu_logic(): # Function that works as menu afterlogging in (logic
             print(cs("Encrypting: ", "green"), end='', flush=True)# print the message that the program is encrypting the message (a visual effect) 
             adding_date_to_message()                        # add the date and time to the message
             write_to_json()                                 # write the message to the JSON file which includes the date and time as well
-            add_message_in_json(name_input, messages)       # add the message to the JSON file
+            encryption_function()                           # encrypt the message
+            add_message_in_json(name_input, encMessages)       # add the message to the JSON file
             print(print_letters_appart(encMessages))        # print the dots separately to make the program look like it's encrypting the message and loading
+            print(cs("\nMessage added!" , "yellow"))
             time.sleep(2)                                   #
             clear()                                         #
             logged_in_menu_logic()                          # call the logged_in_menu_logic function to show the choices after adding the message
