@@ -216,8 +216,11 @@ def logged_in_menu_logic(): # Function that works as menu afterlogging in (logic
             read_messages_from_json()                       # reads the messages from the JSON file
             print(cs("Displaying messages", "magenta"))     #      
             messages = read_messages_from_json()            # read the messages from the JSON file
-            for message in messages:                        # loop that runs through the messages for every message in the messages list in the currently logged in user
-                print(message)                              # print the messages
+            for message in messages:       
+                message.encode('utf-8')                     # loop that runs through the messages for every message in the messages list in the currently logged in user
+                fernet = Fernet(credentials[name_input]['key'])  # create a Fernet instance with the user's specific key
+                decryption_function()                       # decrypt the message
+                print(decMessages)                          # print the decrypted message
             input("\nPress Enter to continue...")           # ask the user to press Enter to continue, allows for better user experience
             clear()                                         #
             logged_in_menu_logic()                          # call the logged_in_menu_logic function to show the choices after going out of the list of messages
