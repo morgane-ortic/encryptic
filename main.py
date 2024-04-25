@@ -250,17 +250,7 @@ def logged_in_menu_logic(): # Function that works as menu afterlogging in (logic
             break
         elif logged_in_choice == 'delete account' or logged_in_choice == '4': # if the user enters 'delete account' or '4' - the program will log out the user
             clear()                                                              #
-            confirmation = input("Are you sure you want to delete your account? (yes/no): ").lower()
-            if confirmation == "yes":
-                delete_account()  # Indent the code block
-            elif confirmation == "no":
-                clear()
-                logged_in_menu_logic()
-            else:
-                print("Invalid input. Please enter 'yes' or 'no'.")
-                time.sleep(1)
-                clear()
-                logged_in_menu_logic()
+            delete_account()                                                     # call the delete_account function to delete the account
         elif logged_in_choice == 'log out' or logged_in_choice == '5':           # if the user enters 'log out' or '4' - the program will log out the user
             clear()                                                              #
             print(cs("Logging out", "magenta"), end='', flush=True)              #
@@ -348,26 +338,27 @@ def adding_date_to_message(): # Function that adds the date and time to the mess
 
 def delete_account():
     global name_input, data, JSON_FILE
-    confirmation = input("Are you sure you want to delete your account? (yes/no): ").lower()
-    if confirmation == 'yes':
-        data = [user for user in data if user['username'] != name_input]
-        write_to_json()
-        print(cs("Account deleted successfully!", "yellow"))
-        time.sleep(2)
-        clear()
-        print(cs("Redirecting to main menu", "orange"), end='', flush=True)
-        print(print_letters_appart(20 * '.'))
-        time.sleep(0.5)
-        clear()
-        main_menu_logic()
-    elif confirmation == 'no':
-        clear()
-        logged_in_menu_logic()
-    else:
-        print("Invalid input. Please enter 'yes' or 'no'.")
-        time.sleep(1)
-        clear()
-        delete_account()
-        # Antons delte account functions comes here
-#======================================================================================================
+    while True:
+        confirmation = input("Are you sure you want to delete your account? (yes/no): ").lower()
+        if confirmation.startswith('y'):
+            data = [user for user in data if user['username'] != name_input]
+            write_to_json()
+            print(cs("Account deleted successfully!", "yellow"))
+            time.sleep(2)
+            clear()
+            print(cs("Redirecting to main menu", "orange"), end='', flush=True)
+            print(print_letters_appart(20 * '.'))
+            time.sleep(0.5)
+            clear()
+            main_menu_logic()
+            break
+        elif confirmation.startswith('n'):
+            clear()
+            logged_in_menu_logic()
+            break
+        else:
+            print("Invalid input. Please enter 'yes' or 'no'.")
+            time.sleep(1)
+            clear()
+
 main_menu_logic() # This is where the program starts.
