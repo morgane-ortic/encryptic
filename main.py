@@ -282,7 +282,7 @@ def read_messages_from_json(): # Function that reads the messages from the JSON 
     with open(JSON_FILE, 'r') as json_file:  # Open the JSON file in read mode
         data = json.load(json_file)          # Load the data from the JSON file
         messages = [user['messages'] for user in data if user['username'] == name_input]  # Extracting only the "messages" field from the loggedin user's dictionary 
-    return messages                          # Return the messages
+    return messages                          # Return the messagesa
 
 def add_message_in_json(name_input, messages): # Function that adds a message to the JSON file
     global data                              # we have to use data as a global variable - otherwise it doesnt work
