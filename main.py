@@ -295,18 +295,7 @@ def add_message_in_json(name_input, messages): # Function that adds a message to
                 None                         # Do nothing
     write_to_json()                          # Write the data (aka the new message) to the JSON file
 
-# NOT WORKING - I DONT KNOW IF IT WORKS AT ALL
-"""def delete_message_from_json(name_input, messages): # Function that deletes a message from the JSON file
-    global data                                     #
-    for user in data:                               # Loop through the data list
-        if user['username'] == name_input:          # If the username is the same as the logged in user's username
-            if 'messages' in user:                  # If the user has messages
-                user['messages'] = ""               # Delete the message
-            else:                                   # If the user doesn't have messages
-                None                                # Do nothing
-    write_to_json() """                                # Write the data (aka the deleted message) to the JSON file
-
-def delete_messages():
+def delete_messages():     # Function that deletes the messages
     global name_input, messages_list
     print("Select the message you want to delete:")
     for i, message in enumerate(messages_list):
@@ -326,7 +315,6 @@ def delete_messages():
     except ValueError:
         print("Invalid choice. Please try again.")
         delete_messages()    
-
 
 def encryption_function(): # Function that encrypts the message inputed by the user
     global messages, encMessages, fernet
