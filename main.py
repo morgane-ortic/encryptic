@@ -115,7 +115,6 @@ def register_account():     # Function that lets you register a new account
         elif initial_message != 'yes' or initial_message != 'no':         # if the user enters something other than 'yes' or 'no'
             print('Would you like to enter an initial message? (yes/no): ')
             clear() 
-            
 
     credentials = { # With this code we store the usernames, passwords, messages and keys of the user in the credentials dictionary
     'username': usernames,         # Store the username
