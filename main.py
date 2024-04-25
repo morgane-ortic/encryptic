@@ -93,6 +93,7 @@ def register_account():     # Function that lets you register a new account
             clear()
             break 
     while True:
+        global encMessages
         print('Would you like to enter an initial message? (yes/no): ')
         initial_message = input().lower()                                 # ask the user if they want to enter an initial message and lower the input
         if not initial_message.strip():                                   # if the input is blank '.strip()' removes the whitespace from the string
@@ -119,7 +120,7 @@ def register_account():     # Function that lets you register a new account
     credentials = { # With this code we store the usernames, passwords, messages and keys of the user in the credentials dictionary
     'username': usernames,         # Store the username
     'password': hashed_passwords,  # Store the hashed password
-    'messages': messages,          # Store the message
+    'messages': encMessages.decode('utf-8'),          # Store the message
     'key': key.decode('utf-8')}    # Convert the key to a string and store it
     
     load_user_data()                              # Load the user data from the JSON file before registration

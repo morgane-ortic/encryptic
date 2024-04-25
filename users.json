@@ -22,5 +22,11 @@
     "password": "$2b$12$nIvvk4MtIpYIQGKEmgnZHu0ROmwU8FrgmYYgTebFFu.2qM0t6sHZi",
     "messages": "hello - Message created at: 2024-04-25 13:29:51\nthis is a 2nd test - Message created at: 2024-04-25 13:30:15\nanother one (dj khaled) - Message created at: 2024-04-25 13:30:37\nanother - Message created at: 2024-04-25 13:33:55\ntestingplease - Message created at: 2024-04-25 13:34:02\nyolo - Message created at: 2024-04-25 13:38:36\nyoloooo - Message created at: 2024-04-25 13:38:44",
     "key": "mRsLo2sKFmaRGbTYRDq6Hzv0XruwnImcZyK-kyCnkiw="
+  },
+  {
+    "username": "roger",
+    "password": "$2b$12$uvo9ltQmxo/YN60mCZWO3uZmeV4AXLW8ByugtFegyPyi80a58/1JG",
+    "messages": "gAAAAABmKk9xKTz0MxtEdVo6qd9Gp2c2cB4OroruBX1p-HwPyO1yCCIoK9yGVRSvPlJSra88PW_wgWX1uIGMLrV2-Fqswy6cQXWV__rUdnf-w8jbLxgWuUrZNZy1Arw8akI77BD-OBnT",
+    "key": "VHgJ73bW1cGNS7sqcAqd8_BH1sB9FxnrSJBGqW9t1YQ="
   }
 ]
