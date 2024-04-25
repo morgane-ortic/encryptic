@@ -1,0 +1,118 @@
+@font-face {
+  font-family: conthrax;
+  src: url(conthrax-sb.otf);
+}
+@font-face {
+  font-family: play;
+  src: url(./Play-Regular.ttf);
+}
+
+html {
+  scroll-padding-top: 100rem;
+}
+
+body {
+  background-color: #fcee0a;
+  margin: 0;
+}
+
+header {
+  background-color: black;
+  width: auto;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.image {
+  height: 58px;
+  width: 1920px;
+  padding-bottom: 0px;
+}
+
+main {
+  background-color: #fcee0a;
+  min-width: 00px;
+  min-height: 1080px;
+  padding: 30px, 0px, 30px, 30px;
+}
+
+.slider {
+  width: 60vw;
+  margin: 0px auto;
+  position: relative;
+  min-height: 450px;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: flex-start;
+  color: white;
+  transition: all 0.5s ease-in-out;
+}
+
+.slider,
+img {
+  margin-bottom: 30px;
+  width: 800px;
+  height: 450px;
+  object-fit: cover;
+}
+
+.slide:not(:target),
+:target ~ #slide4 {
+  opacity: 0;
+}
+
+.slide p {
+  position: relative;
+  bottom: 0;
+  color: black;
+  margin-bottom: 0px;
+  text-align: justify;
+  font-family: play, sans-serif;
+  font-size: 28px;
+}
+
+nav {
+  position: absolute;
+  bottom: -45px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 20;
+}
+
+nav a {
+  background: gray;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 30px;
+  display: inline-block;
+  text-decoration: none;
+}
+
+nav a:hover {
+  opacity: 0.6;
+}
+
+h1 {
+  text-align: center;
+  font-family: conthrax, sans-serif;
+  color: magenta;
+  font-size: 56px;
+  margin: 0px;
+}
+
+.clear {
+  clear: both;
+}

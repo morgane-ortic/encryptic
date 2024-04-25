@@ -174,14 +174,14 @@ def logging_in():           # Function that lets you login to your account
                     print("Yes or no?")                                  # print the message that the user needs to enter 'yes' or 'no'
                     time.sleep(1)                                        #
                     clear()                                              #
-                elif question == 'yes':                                  # if the user enters 'yes' - the program will allow the user to register
+                elif question.startswith("y"):                                  # if the user enters 'yes' - the program will allow the user to register
                     clear()                                              #
                     print("Redirecting to registration page", end='', flush=True) # print the message that the program is redirecting to the registration page
                     print(print_letters_appart(20 * '.'))                #
                     clear()                                              #
                     register_account()                                   # call the register_account function to allow the user to register
                     break                                                # break the loop when the user enters 'yes'
-                elif question == 'no':                                   # if the user enters 'no' - the program will not allow the user to register
+                elif question.startswith('n'):                                   # if the user enters 'no' - the program will not allow the user to register
                     clear()                                              #
                     print("Redirecting to main menu", end='', flush=True)# print the message that the program is redirecting to the main menu
                     print(print_letters_appart(20 * '.'))                #
