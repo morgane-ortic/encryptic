@@ -14,6 +14,7 @@ import weather                          # allows us to work with the weather.py 
 
 usernames = ""                          # variables that store the username inputed by the user
 passwords = ""                          # variables that store the password inputed by the user
+message = ""                            # variable that stores the message inputed by the user
 messages = ""                           # variable that stores the message inputed by the user
 messages_list = []                      # list that stores the messages
 credentials = {}                        # dictionary that stores the credentials
@@ -119,7 +120,7 @@ def register_account():     # Function that lets you register a new account
     credentials = { # With this code we store the usernames, passwords, messages and keys of the user in the credentials dictionary
     'username': usernames,         # Store the username
     'password': hashed_passwords,  # Store the hashed password
-    'messages': encMessages,          # Store the message
+    'messages': messages,          # Store the message
     'key': key.decode('utf-8')}    # Convert the key to a string and store it
     
     load_user_data()                              # Load the user data from the JSON file before registration
@@ -174,14 +175,14 @@ def logging_in():           # Function that lets you login to your account
                     print("Yes or no?")                                  # print the message that the user needs to enter 'yes' or 'no'
                     time.sleep(1)                                        #
                     clear()                                              #
-                elif question.startswith("y"):                                  # if the user enters 'yes' - the program will allow the user to register
+                elif question == 'yes':                                  # if the user enters 'yes' - the program will allow the user to register
                     clear()                                              #
                     print("Redirecting to registration page", end='', flush=True) # print the message that the program is redirecting to the registration page
                     print(print_letters_appart(20 * '.'))                #
                     clear()                                              #
                     register_account()                                   # call the register_account function to allow the user to register
                     break                                                # break the loop when the user enters 'yes'
-                elif question.startswith('n'):                                   # if the user enters 'no' - the program will not allow the user to register
+                elif question == 'no':                                   # if the user enters 'no' - the program will not allow the user to register
                     clear()                                              #
                     print("Redirecting to main menu", end='', flush=True)# print the message that the program is redirecting to the main menu
                     print(print_letters_appart(20 * '.'))                #
@@ -205,7 +206,7 @@ def logged_in_menu_ui():    # Function that shows the logged in menu choices - U
 
 def logged_in_menu_logic(): # Function that works as menu afterlogging in (logical part of the logged in menu) 
     logged_in_menu_ui()                                     # Calling and showing the menu choices after logging in (UI part)
-    global messages                                         # like this we are able to use the variables in the function without giving them values
+    global messages, fernet                                   # like this we are able to use the variables in the function without giving them values
     logged_in_choice = input("Enter your choice: ").lower() # ask the user to enter a choice - it gets lowercased to make it easier to compare
     while (logged_in_choice != 'display messages' or 'add message' or 'delete message' or 
            'log out' or 'exit' or '1' or '2' or '3' or '4' or '5'): # loop that runs until the user enters a valid choice from the logged in menu options
@@ -292,10 +293,10 @@ def write_to_json():        # Function that writes the data to the JSON file
         json.dump(data, json_file, indent=2)  # Write the data to the JSON file
 
 def read_messages_from_json(): # Function that reads the messages from the JSON file / specifically the messages of the logged in user
-    global JSON_FILE, data, name_input       # 
+    global JSON_FILE, data, name_input, key  # 
     with open(JSON_FILE, 'r') as json_file:  # Open the JSON file in read mode
         data = json.load(json_file)          # Load the data from the JSON file
-        messages = [user['messages'] for user in data if user['username'] == name_input]  # Extracting only the "messages" field from the loggedin user's dictionary
+        messages = [user['messages'] for user in data if user['username'] == name_input]  # Extracting only the "messages" field from the loggedin user's dictionary 
     return messages                          # Return the messages
 
 def add_message_in_json(name_input, messages): # Function that adds a message to the JSON file
@@ -322,11 +323,10 @@ def delete_message_from_json(name_input, messages): # Function that deletes a me
 def encryption_function(): # Function that encrypts the message inputed by the user
     global messages, encMessages, fernet
     encMessages = fernet.encrypt(messages.encode()) # Encrypt the messages / to encrypt the string it must be encoded to byte string before encryption_function
-    messages = encMessages.decode('utf-8')       # Convert the encrypted message to a string
 
 def decryption_function(): # Function that decrypts an encrypted message  
-    global encMessages, fernet
-    messages = fernet.decrypt(encMessages).decode() # decrypting the encrypted string with the same Fernet instance that was used for encrypting the string
+    global fernet, message, decMessages
+    decMessages = fernet.decrypt(message.encode()).decode() # decrypting the encrypted string with the same Fernet instance that was used for encrypting the string
 
 def print_letters_appart(string): # Function that prints out string characters one by one
     for char in string:                   # loop that runs through the characters in the string
