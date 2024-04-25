@@ -119,7 +119,7 @@ def register_account():     # Function that lets you register a new account
     credentials = { # With this code we store the usernames, passwords, messages and keys of the user in the credentials dictionary
     'username': usernames,         # Store the username
     'password': hashed_passwords,  # Store the hashed password
-    'messages': messages,          # Store the message
+    'messages': encMessages,          # Store the message
     'key': key.decode('utf-8')}    # Convert the key to a string and store it
     
     load_user_data()                              # Load the user data from the JSON file before registration
@@ -322,6 +322,7 @@ def delete_message_from_json(name_input, messages): # Function that deletes a me
 def encryption_function(): # Function that encrypts the message inputed by the user
     global messages, encMessages, fernet
     encMessages = fernet.encrypt(messages.encode()) # Encrypt the messages / to encrypt the string it must be encoded to byte string before encryption_function
+    messages = encMessages.decode('utf-8')       # Convert the encrypted message to a string
 
 def decryption_function(): # Function that decrypts an encrypted message  
     global encMessages, fernet
