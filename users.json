@@ -1,43 +1,8 @@
 [
   {
-    "username": "banana",
-    "password": "$2b$12$FPWcjX.aRMd/LzpN2Sr8IO9h7sNSnNrQrGIFelLql0qQhU39I84ny",
-    "messages": "\nb'gAAAAABmKh9ztpOcR6Qj69lJE6DVuMqi_D1x0TM6LReXmsWlBC7FljVz5-WFtUCbSQcUWU4DibRLd2zwGFEg7w2yLYB48sUxiA=='",
-    "key": "m-Xp8fe4fpu1bXRaWGN8zKYfu5KKeDnCO-ZTw7FKFjo="
-  },
-  {
-    "username": "tets",
-    "password": "$2b$12$n2uxz2D8npdmhqG5QnGNIeOdkY8WaAEBFwLoaaROADoIBr0Dv0zr6",
-    "messages": "testasdsad - Message created at: 2024-04-24 15:31:07",
-    "key": "9cyoe_Fe-Glu3TaM-bcGTPLNowolkY5lc6gLZovlTIY="
-  },
-  {
-    "username": "delete",
-    "password": "$2b$12$MQrPw.XyBX/C7SoPWevXVuwQBywJkjqbwJstVAsGYi25nNnxDxNPe",
-    "messages": "delete this - Message created at: 2024-04-25 11:40:34\ndelete 2 - Message created at: 2024-04-25 11:40:56",
-    "key": "Ae06tG4X6Kti3cEPTtKAcHMJKaRdCvGgAH0_rjqgQIg="
-  },
-  {
-    "username": "whatsup1",
-    "password": "$2b$12$nIvvk4MtIpYIQGKEmgnZHu0ROmwU8FrgmYYgTebFFu.2qM0t6sHZi",
-    "messages": "hello - Message created at: 2024-04-25 13:29:51\nthis is a 2nd test - Message created at: 2024-04-25 13:30:15\nanother one (dj khaled) - Message created at: 2024-04-25 13:30:37\nanother - Message created at: 2024-04-25 13:33:55\ntestingplease - Message created at: 2024-04-25 13:34:02\nyolo - Message created at: 2024-04-25 13:38:36\nyoloooo - Message created at: 2024-04-25 13:38:44",
-    "key": "mRsLo2sKFmaRGbTYRDq6Hzv0XruwnImcZyK-kyCnkiw="
-  },
-  {
-    "username": "roger",
-    "password": "$2b$12$uvo9ltQmxo/YN60mCZWO3uZmeV4AXLW8ByugtFegyPyi80a58/1JG",
-    "messages": "gAAAAABmKk9xKTz0MxtEdVo6qd9Gp2c2cB4OroruBX1p-HwPyO1yCCIoK9yGVRSvPlJSra88PW_wgWX1uIGMLrV2-Fqswy6cQXWV__rUdnf-w8jbLxgWuUrZNZy1Arw8akI77BD-OBnT",
-    "key": "VHgJ73bW1cGNS7sqcAqd8_BH1sB9FxnrSJBGqW9t1YQ="
-  },
-  {
-    "username": "whatsupo",
-    "password": "$2b$12$Zr5C15lHuojH85V3R9g/wO5FKIq4n/bEnMRRz.NT/tKmj/h0zKZm.",
-    "messages": "gAAAAABmK2ZsLLGQzgQTFZnP6-Sl0Jjv6iE6X4gGGZp-eUhP4pSV86FupFnqeCGx9OrfG--nJozMfHOs1AhA57xlm_bnL8fUKio3qfI_nUIRJoN_YBiOssaMt779USCYkNH9Ncnu-09l",
+    "username": "12345",
+    "password": "$2b$12$cTIEZcn1WS8wpM4TJrcEhu1CEy/teXIBfxMX0bd/gdrP7T3DMXYL2",
+    "messages": "",
     "key": "8EfT-gNbUAoCfWj85CoGH8Ddh5nmz0z9Hptl25vwWlo="
-  },
-  {
-    "username": "thisis",
-    "password": "$2b$12$JrIyJ19AFyB9ONQTiAfwz.UJY1CEe5.WCZF9nbiksTUyiiM4chztm",
-    "messages": "gAAAAABmK2dsdXtDN2lXKSWGCJKuuj74v3AHTfN2wBOgD2l6enBppg9YQMZN85lyLXLsjfMrW2eJ8sETlbqmzAbl09Rl1I1LIC7yJ9vbZLA3Ns-1PH2oLhvVHAnVNEApiDnplvye-wZrznGx62Jo01eysmov11IDHQ==",
-    "key": "8EfT-gNbUAoCfWj85CoGH8Ddh5nmz0z9Hptl25vwWlo="
-  },
+  }
+]

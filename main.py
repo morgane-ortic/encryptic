@@ -337,6 +337,7 @@ def add_message_in_json(name_input, messages):
 
 def delete_messages():
     global name_input, messages_list, data
+    clear()
     print("\nSelect the message you want to delete:")
     for i, message in enumerate(messages_list):
         print(f"{i+1}. {message}")
@@ -344,7 +345,6 @@ def delete_messages():
     if choice == 'q':
         clear()
         logged_in_menu_logic()
-        return  # Return after canceling to prevent further execution
     try:
         index = int(choice) - 1
         if index < 0 or index >= len(messages_list):
@@ -358,8 +358,8 @@ def delete_messages():
                 if user['username'] == name_input:
                     user['messages'] = '\n'.join(messages_list)
                     write_to_json()  # Update the JSON file with the modified messages list
-                    break
-            return  # Return after deleting a message
+                    time.sleep(2)
+                    delete_messages()
     except ValueError:
         print("Invalid choice. Please try again.")
         delete_messages()
