@@ -275,11 +275,6 @@ def logged_in_menu_logic():
             clear()
             exit()
 
-def decryption_function(): # Function that decrypts an encrypted message  
-    global fernet, message, decMessages, key
-    key = fernet.key.decode('utf-8')
-    decMessages = fernet.decrypt(message.encode()).decode() # decrypting the encrypted string with the same Fernet instance that was used for encrypting the string
-
 def load_user_data():       # Function that loads the user data from the JSON file
     global data, encMessages                                 
     if os.path.exists(JSON_FILE) and os.stat(JSON_FILE).st_size != 0: # Check if the JSON file exists and is not empty
@@ -322,10 +317,19 @@ def add_message_in_json(name_input, messages):
 
 def delete_messages():
     global name_input, messages_list, data
+    import cryptography
     clear()
     print("\nSelect the message you want to delete:")
+    load_user_data()
+    messages_string = read_messages_from_json()[0]  # Get the first (and only) item in the list
+    messages_list = messages_string.split('\n')  # Split the string into individual messages
     for i, message in enumerate(messages_list):
-        print(f"{i+1}. {message}")
+        try:
+            decrypted_message = fernet.decrypt(message.encode()).decode()
+            print(f"{i+1}. {decrypted_message}")
+        except cryptography.fernet.InvalidToken:
+            print("Error: Unable to decrypt message. Invalid token.")
+    # rest of the function...
     choice = input("Enter the number of the message you want to delete (or 'q' to cancel): ")
     if choice == 'q':
         clear()
