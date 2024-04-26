@@ -108,7 +108,8 @@ def register_account():     # Function that lets you register a new account
             encryption_function()                                         # encrypt the message
             print(cs("Encrypting: ", "green"), end='', flush=True)        # print the message that the program is encrypting the message (a visual effect)
             print(print_letters_appart(encMessages))                      # print the dots separately to make the program look like it's encrypting the message and loading
-            print(cs("\nMessage added!" , "yellow"))                      #
+            print(cs("\nMessage added!" , "yellow"))                      #   
+            time.sleep(2)                                                 #      
             break                                                         # break the loop when the user enters a valid message
         elif initial_message == 'no':                                     # if the user enters 'no' - the program will not allow the user to enter a message
             clear()                                                       #
@@ -206,21 +207,18 @@ def logged_in_menu_ui():    # Function that shows the logged in menu choices - U
 
 def logged_in_menu_logic(): # Function that works as menu afterlogging in (logical part of the logged in menu) 
     logged_in_menu_ui()                                     # Calling and showing the menu choices after logging in (UI part)
-    global messages, fernet                                   # like this we are able to use the variables in the function without giving them values
+    global messages, fernet, name_input                     # like this we are able to use the variables in the function without giving them values
     logged_in_choice = input("Enter your choice: ").lower() # ask the user to enter a choice - it gets lowercased to make it easier to compare
     while (logged_in_choice != 'display messages' or 'add message' or 'delete message' or 
            'log out' or 'exit' or '1' or '2' or '3' or '4' or '5'): # loop that runs until the user enters a valid choice from the logged in menu options
         if logged_in_choice == 'display messages' or logged_in_choice == '1': # if the user enters 'display messages' or '1' - the program will display the messages
-            clear()                                         #
+            clear()     
             load_user_data()                                # allows us to work with the data from the JSON file
             read_messages_from_json()                       # reads the messages from the JSON file
             print(cs("Displaying messages", "magenta"))     #      
             messages = read_messages_from_json()            # read the messages from the JSON file
             for message in messages:       
-                message.encode('utf-8')                     # loop that runs through the messages for every message in the messages list in the currently logged in user
-                fernet = Fernet(credentials[name_input]['key'])  # create a Fernet instance with the user's specific key
-                decryption_function()                       # decrypt the message
-                print(decMessages)                          # print the decrypted message
+                print(message)       
             input("\nPress Enter to continue...")           # ask the user to press Enter to continue, allows for better user experience
             clear()                                         #
             logged_in_menu_logic()                          # call the logged_in_menu_logic function to show the choices after going out of the list of messages
@@ -241,7 +239,18 @@ def logged_in_menu_logic(): # Function that works as menu afterlogging in (logic
             break                                            
         elif logged_in_choice == 'delete message' or logged_in_choice == '3': # if the user enters 'delete message' or '3' - the program will allow the user to delete the message
             clear()                                         #
-            delete_messages()                               # call the delete_messages function to delete the message
+            load_user_data()                                # allows us to work with the data from the JSON file
+            read_messages_from_json()     
+            messages = read_messages_from_json()            # read the messages from the JSON file
+            for message in messages:       
+                for i in range(len(messages)):               # loop that runs through the messages
+                    print(f"{i+1}. {message}")
+                    print("\nSelect the message you want to delete:")       
+            break
+
+
+
+                                         
         elif logged_in_choice == 'delete account' or logged_in_choice == '4': # if the user enters 'delete account' or '4' - the program will log out the user
             clear()                                                              #
             delete_account()                                                     # call the delete_account function to delete the account
@@ -255,7 +264,7 @@ def logged_in_menu_logic(): # Function that works as menu afterlogging in (logic
             print(print_letters_appart('..........\n\n'))                        #
             clear()                                                              # 
             main_menu_logic()                                                    # call the main_menu_logic function to show the choices after logging out
-        elif logged_in_choice == 'exit' or logged_in_choice == '6':              # if the user enters 'exit' or '5' - the program will stop running
+        elif logged_in_choice == 'exit' or logged_in_choice == '5':              # if the user enters 'exit' or '5' - the program will stop running
             clear()                                                              #
             print(cs("Exiting program", "magenta") , end='', flush=True)         #
             print(print_letters_appart(20 * '.'))                                #
@@ -263,8 +272,13 @@ def logged_in_menu_logic(): # Function that works as menu afterlogging in (logic
             clear()                                                              #
             exit()                                                               # this is where the program finally stops running - os.exit() is used to stop the program
 
+def decryption_function(): # Function that decrypts an encrypted message  
+    global fernet, message, decMessages, key
+    key = fernet.key.decode('utf-8')
+    decMessages = fernet.decrypt(message.encode()).decode() # decrypting the encrypted string with the same Fernet instance that was used for encrypting the string
+
 def load_user_data():       # Function that loads the user data from the JSON file
-    global data                                 
+    global data, encMessages                                 
     if os.path.exists(JSON_FILE) and os.stat(JSON_FILE).st_size != 0: # Check if the JSON file exists and is not empty
         with open(JSON_FILE) as json_file:                            # Open the JSON file in read mode
             data = json.load(json_file)                               # Load the data from the JSON file
@@ -302,12 +316,12 @@ def add_message_in_json(name_input, messages): # Function that adds a message to
 
 def delete_messages():     # Function that deletes the messages
     global name_input, messages_list
-    clear()
-    print("Select the message you want to delete:")
+    print("\nSelect the message you want to delete:")
     for i, message in enumerate(messages_list):
         print(f"{i+1}. {message}")
     choice = input("Enter the number of the message you want to delete (or 'q' to cancel): ")
     if choice == 'q':
+        clear()
         logged_in_menu_logic()
     try:
         index = int(choice) - 1
@@ -318,9 +332,6 @@ def delete_messages():     # Function that deletes the messages
             del messages_list[index]
             print("Message deleted successfully.")
             write_to_json()  # Update the JSON file with the modified messages list
-            time.sleep(2)
-            clear()
-            delete_messages()
     except ValueError:
         print("Invalid choice. Please try again.")
         delete_messages()    
@@ -329,9 +340,6 @@ def encryption_function(): # Function that encrypts the message inputed by the u
     global messages, encMessages, fernet
     encMessages = fernet.encrypt(messages.encode()) # Encrypt the messages / to encrypt the string it must be encoded to byte string before encryption_function
 
-def decryption_function(): # Function that decrypts an encrypted message  
-    global fernet, message, decMessages
-    decMessages = fernet.decrypt(message.encode()).decode() # decrypting the encrypted string with the same Fernet instance that was used for encrypting the string
 
 def print_letters_appart(string): # Function that prints out string characters one by one
     for char in string:                   # loop that runs through the characters in the string
