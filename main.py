@@ -349,6 +349,7 @@ def delete_messages():
         index = int(choice) - 1
         if index < 0 or index >= len(messages_list):
             print("Invalid choice. Please try again.")
+            time.sleep(2)
             delete_messages()
             return  # Return to prevent further execution
         else:
