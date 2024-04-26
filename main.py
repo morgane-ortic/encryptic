@@ -1,5 +1,6 @@
 #Libaries used in the program:: - we put them here to shorten the code and make the code more readable
 
+import requests                         # allows us to send HTTP requests
 import datetime                         # allows us to work with dates and times
 import json                             # allows us to work with JSON files
 import time                             # allows us to work with time / different frin datetime
@@ -31,20 +32,6 @@ JSON_FILE = './users.json'              # variable that stores the path to the J
 
 clear = lambda: os.system('clear')      # define a "clear" function that clears the terminal from previous lines
 clear()                                 # call the clear function to clear the terminal
-
-def load_key():
-    key_file = "encryption_key.txt"
-    if os.path.exists(key_file):
-        with open(key_file, "rb") as f:
-            key = f.read()
-    else:
-        key = Fernet.generate_key()
-        with open(key_file, "wb") as f:
-            f.write(key)
-    return key
-
-key = load_key()
-fernet = Fernet(key)
 
 def main_menu_ui():         # Function that shows the main menu choices - User Interface (Graphical part of the main menu) - ONLY PRINTING
     print(cs("Welcome to the encryption program. \n" , "blue"))             # print the welcome message
@@ -288,12 +275,6 @@ def logged_in_menu_logic():
             clear()
             exit()
 
-
-def decryption_function(): # Function that decrypts an encrypted message  
-    global fernet, message, decMessages, key
-    key = fernet.key.decode('utf-8')
-    decMessages = fernet.decrypt(message.encode()).decode() # decrypting the encrypted string with the same Fernet instance that was used for encrypting the string
-
 def load_user_data():       # Function that loads the user data from the JSON file
     global data, encMessages                                 
     if os.path.exists(JSON_FILE) and os.stat(JSON_FILE).st_size != 0: # Check if the JSON file exists and is not empty
@@ -334,21 +315,30 @@ def add_message_in_json(name_input, messages):
             write_to_json()
             break
 
-
 def delete_messages():
     global name_input, messages_list, data
+    import cryptography
+    clear()
     print("\nSelect the message you want to delete:")
+    load_user_data()
+    messages_string = read_messages_from_json()[0]  # Get the first (and only) item in the list
+    messages_list = messages_string.split('\n')  # Split the string into individual messages
     for i, message in enumerate(messages_list):
-        print(f"{i+1}. {message}")
+        try:
+            decrypted_message = fernet.decrypt(message.encode()).decode()
+            print(f"{i+1}. {decrypted_message}")
+        except cryptography.fernet.InvalidToken:
+            print("Error: Unable to decrypt message. Invalid token.")
+    # rest of the function...
     choice = input("Enter the number of the message you want to delete (or 'q' to cancel): ")
     if choice == 'q':
         clear()
         logged_in_menu_logic()
-        return  # Return after canceling to prevent further execution
     try:
         index = int(choice) - 1
         if index < 0 or index >= len(messages_list):
             print("Invalid choice. Please try again.")
+            time.sleep(2)
             delete_messages()
             return  # Return to prevent further execution
         else:
@@ -358,19 +348,16 @@ def delete_messages():
                 if user['username'] == name_input:
                     user['messages'] = '\n'.join(messages_list)
                     write_to_json()  # Update the JSON file with the modified messages list
-                    break
-            return  # Return after deleting a message
+                    time.sleep(2)
+                    delete_messages()
     except ValueError:
         print("Invalid choice. Please try again.")
         delete_messages()
-
 
 def encryption_function():
     global messages, encMessages, fernet
     encMessages = fernet.encrypt(messages.encode())
     return encMessages  # Return the encrypted message as bytes
-
-
 
 def print_letters_appart(string): # Function that prints out string characters one by one
     for char in string:                   # loop that runs through the characters in the string
@@ -407,5 +394,19 @@ def delete_account():
             print("Invalid input. Please enter 'yes' or 'no'.")
             time.sleep(1)
             clear()
+
+def load_key():
+    key_file = "encryption_key.txt"
+    if os.path.exists(key_file):
+        with open(key_file, "rb") as f:
+            key = f.read()
+    else:
+        key = Fernet.generate_key()
+        with open(key_file, "wb") as f:
+            f.write(key)
+    return key
+
+key = load_key()
+fernet = Fernet(key)
 
 main_menu_logic() # This is where the program starts.
