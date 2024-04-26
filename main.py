@@ -206,74 +206,73 @@ def logged_in_menu_ui():    # Function that shows the logged in menu choices - U
     print("║ 4. Delete Account    ║" , "\n║ 5. Log out           ║" , "\n║ 6. Exit              ║")
     print("╚" + "═" * 22 + "╝\n")
 
-def logged_in_menu_logic():
-    logged_in_menu_ui()
+def logged_in_menu_logic():     # Function that works at the program menu once logged in (logical part of it)
+    logged_in_menu_ui()         # Call and show the logged in menu choices
     global messages, fernet, name_input
     import cryptography
-    while True:
-        logged_in_choice = input("Enter your choice: ").lower()
+    while True:                 # loop that runs until the user enters a valid choice from the main menu options
+        logged_in_choice = input("Enter your choice: ").lower()             # ask the user to enter a choice - it gets lowercased to make it easier to compare
 
-        if logged_in_choice in ['display messages', '1']:
+        if logged_in_choice in ['display messages', '1']:                   # if user enters 'display messages' or '1' - the program will display the messages from that user -
             clear()
-            load_user_data()
-            messages_string = read_messages_from_json()[0]  # Get the first (and only) item in the list
-            messages_list = messages_string.split('\n')  # Split the string into individual messages
+            load_user_data()                                    # Load the user data from the JSON file, allows us to work with the data
+            messages_string = read_messages_from_json()[0]      # Calls the function read_messages_from_json to access messages starting from index [0]
+            messages_list = messages_string.split('\n')         # Split the string (all the messages together, separated by \n) into individual messages
             print(cs("Displaying messages", "magenta"))
-            for message in messages_list:
+            for message in messages_list:                       # Apply the following to every single message:
                 try:
-                    decrypted_message = fernet.decrypt(message.encode()).decode()
-                    print(decrypted_message)
-                except cryptography.fernet.InvalidToken:
+                    decrypted_message = fernet.decrypt(message.encode()).decode()       # Convert message from string to bytes, decrypt message and converting it to string again
+                    print(decrypted_message)                                            # Print decrypted message
+                except cryptography.fernet.InvalidToken:                                # If there is no valid key, will return the following error message:
                     print("Error: Unable to decrypt message. Invalid token.")
             input("\nPress Enter to continue...")
-            clear()
-            logged_in_menu_logic()
+            clear()                                                         # Clear terminal
+            logged_in_menu_logic()                                          # Go back to the start of the logged in menu
             break
 
-        elif logged_in_choice in ['add message', '2']:
+        elif logged_in_choice in ['add message', '2']:                      # if user enters 'add messages' or '2' - runs the option to add messages
             clear()
-            messages = input(cs("Enter a new message: ", "cyan"))
-            print(cs("Encrypting: ", "green"), end='', flush=True)
-            adding_date_to_message()
-            write_to_json()
-            encryption_function()
-            add_message_in_json(name_input, encMessages)
-            print(print_letters_appart(encMessages))
+            messages = input(cs("Enter a new message: ", "cyan"))           # Ask user to input a new message
+            print(cs("Encrypting: ", "green"), end='', flush=True)                      
+            adding_date_to_message()                                        # add the date and time to the message
+            write_to_json()                                                 # Access the JSON file for writing
+            encryption_function()                                           # encrypt the message
+            add_message_in_json(name_input, encMessages)                    # Add message to the JSON file
+            print(print_letters_appart(encMessages))                        # Print encrypted message
             print(cs("\nMessage added!", "yellow"))
             time.sleep(2)
             clear()
-            logged_in_menu_logic()
+            logged_in_menu_logic()                                          # Go back to the start of logged in menu
             break
 
-        elif logged_in_choice in ['delete message', '3']:
+        elif logged_in_choice in ['delete message', '3']:                   # if user enters 'delete message' or '3' - runs the option to delete messages
             clear()
-            load_user_data()
-            messages_list = read_messages_from_json()
-            delete_messages()
+            load_user_data()                                                # Access the JSON file for reading
+            messages_list = read_messages_from_json()                       # Access the messages from the JSON file
+            delete_messages()                                               # calls the function to delete messages
             break
 
-        elif logged_in_choice in ['delete account', '4']:
+        elif logged_in_choice in ['delete account', '4']:                   # if user enters 'delete account' or '4' - runs the option to delete account
             clear()
-            delete_account()
+            delete_account()                                                # calls the function to delete account
 
-        elif logged_in_choice in ['log out', '5']:
+        elif logged_in_choice in ['log out', '5']:                          # if user enters 'log out' or '5' - logs out of current account
             clear()
-            print(cs("Logging out", "magenta"), end='', flush=True)
-            print(print_letters_appart(20 * '.'))
+            print(cs("Logging out", "magenta"), end='', flush=True)         # Prints "Logging out" in a fancy way
+            print(print_letters_appart(20 * '.'))                           # Nice text effects....
             time.sleep(0.5)
             clear()
             print(cs("Redirecting to main menu", "orange"), end='', flush=True)
             print(print_letters_appart('..........\n\n'))
             clear()
-            main_menu_logic()
+            main_menu_logic()                                               # Go back to main menu
 
-        elif logged_in_choice in ['exit', '6']:
-            clear()
-            print(cs("Exiting program", "magenta"), end='', flush=True)
+        elif logged_in_choice in ['exit', '6']:                             # if user enters 'exit' or '6' - exit the program
+            print(cs("Exiting program", "magenta"), end='', flush=True)     # Nice texts effects...
             print(print_letters_appart(20 * '.'))
             time.sleep(1.5)
             clear()
-            exit()
+            exit()                                                          # exit the program
 
 def load_user_data():       # Function that loads the user data from the JSON file
     global data, encMessages                                 
