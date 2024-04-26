@@ -229,7 +229,8 @@ def logged_in_menu_logic():
         if logged_in_choice in ['display messages', '1']:
             clear()
             load_user_data()
-            messages_list = read_messages_from_json()
+            messages_string = read_messages_from_json()[0]  # Get the first (and only) item in the list
+            messages_list = messages_string.split('\n')  # Split the string into individual messages
             print(cs("Displaying messages", "magenta"))
             for message in messages_list:
                 try:
