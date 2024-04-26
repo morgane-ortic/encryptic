@@ -299,7 +299,7 @@ def read_messages_from_json(): # Function that reads the messages from the JSON 
     with open(JSON_FILE, 'r') as json_file:  # Open the JSON file in read mode
         data = json.load(json_file)          # Load the data from the JSON file
         messages = [user['messages'] for user in data if user['username'] == name_input]  # Extracting only the "messages" field from the loggedin user's dictionary 
-    return messages                          # Return the messages
+    return messages                          # Return the messagesa
 
 def add_message_in_json(name_input, messages):
     global data
@@ -369,43 +369,43 @@ def adding_date_to_message(): # Function that adds the date and time to the mess
     messages += f" - Message created at: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" # Add the date and time to the message
     messages_list.append(fernet.encrypt(messages.encode()).decode('utf-8'))                       # Encrypt and add the message to the list       
 
-def delete_account():
-    global name_input, data, JSON_FILE
-    while True:
-        confirmation = input("Are you sure you want to delete your account? (yes/no): ").lower()
-        if confirmation.startswith('y'):
-            data = [user for user in data if user['username'] != name_input]
-            write_to_json()
-            print(cs("Account deleted successfully!", "yellow"))
-            time.sleep(2)
+def delete_account():       # Function that deletes the account of the logged in user
+    global name_input, data, JSON_FILE     # we have to use name_input, data and JSON_FILE as global variables - otherwise it doesnt work
+    while True:                         # loop that runs until the user enters a valid choice
+        confirmation = input("Are you sure you want to delete your account? (yes/no): ").lower()    # ask the user if they want to delete their account and lower the input
+        if confirmation.startswith('y'):    # if the user enters 'yes' - the program will delete the account
+            data = [user for user in data if user['username'] != name_input]    # Delete the user from the data list
+            write_to_json()                                                 # Write the data back to the JSON file
+            print(cs("Account deleted successfully!", "yellow"))         # print the message that the account was deleted successfully
+            time.sleep(2)   
+            clear()    
+            print(cs("Redirecting to main menu", "orange"), end='', flush=True)   # print the message that the program is redirecting to the main menu
+            print(print_letters_appart(20 * '.'))                              # print the dots separately to make the program look like it's redirecting
+            time.sleep(0.5)                                                  # wait for 0.5 seconds before redirecting to the main menu
             clear()
-            print(cs("Redirecting to main menu", "orange"), end='', flush=True)
-            print(print_letters_appart(20 * '.'))
-            time.sleep(0.5)
-            clear()
-            main_menu_logic()
-            break
-        elif confirmation.startswith('n'):
-            clear()
-            logged_in_menu_logic()
-            break
-        else:
-            print("Invalid input. Please enter 'yes' or 'no'.")
-            time.sleep(1)
-            clear()
+            main_menu_logic()                                             # call the main_menu_logic function to show the choices again after deleting the account
+            break                                                    # break the loop when the user enters 'yes'
+        elif confirmation.startswith('n'):   # if the user enters 'no' - the program will not delete the account
+            clear()  
+            logged_in_menu_logic()         # call the logged_in_menu_logic function to show the choices again after not deleting the account
+            break                        # break the loop when the user enters 'no'
+        else:                         # if the user enters something other than 'yes' or 'no'
+            print("Invalid input. Please enter 'yes' or 'no'.")   # print the message that the user needs to enter 'yes' or 'no'
+            time.sleep(1)   
+            clear()                # wait for 1 second before clearing the terminal
 
-def load_key():
-    key_file = "encryption_key.txt"
-    if os.path.exists(key_file):
-        with open(key_file, "rb") as f:
-            key = f.read()
-    else:
-        key = Fernet.generate_key()
-        with open(key_file, "wb") as f:
-            f.write(key)
-    return key
+def load_key():  # Function that loads the encryption key from the file
+    key_file = "encryption_key.txt"     # variable that stores the path to the file with the encryption key
+    if os.path.exists(key_file):     # if the file with the encryption key exists
+        with open(key_file, "rb") as f:             # open the file in read mode
+            key = f.read()                       # read the key from the file
+    else:                               # if the file with the encryption key does not exist
+        key = Fernet.generate_key()     # generate a new key
+        with open(key_file, "wb") as f:         # open the file in write mode
+            f.write(key)            # write the key to the file
+    return key                    # return the key
 
-key = load_key()
-fernet = Fernet(key)
+key = load_key()        # load the encryption key
+fernet = Fernet(key)            # create a Fernet instance with the key
 
 main_menu_logic() # This is where the program starts.
