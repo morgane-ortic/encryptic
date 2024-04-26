@@ -14,6 +14,7 @@ import weather                          # allows us to work with the weather.py 
 
 usernames = ""                          # variables that store the username inputed by the user
 passwords = ""                          # variables that store the password inputed by the user
+message = ""                            # variable that stores the message inputed by the user
 messages = ""                           # variable that stores the message inputed by the user
 messages_list = []                      # list that stores the messages
 credentials = {}                        # dictionary that stores the credentials
@@ -30,6 +31,20 @@ JSON_FILE = './users.json'              # variable that stores the path to the J
 
 clear = lambda: os.system('clear')      # define a "clear" function that clears the terminal from previous lines
 clear()                                 # call the clear function to clear the terminal
+
+def load_key():
+    key_file = "encryption_key.txt"
+    if os.path.exists(key_file):
+        with open(key_file, "rb") as f:
+            key = f.read()
+    else:
+        key = Fernet.generate_key()
+        with open(key_file, "wb") as f:
+            f.write(key)
+    return key
+
+key = load_key()
+fernet = Fernet(key)
 
 def main_menu_ui():         # Function that shows the main menu choices - User Interface (Graphical part of the main menu) - ONLY PRINTING
     print(cs("Welcome to the encryption program. \n" , "blue"))             # print the welcome message
@@ -92,13 +107,14 @@ def register_account():     # Function that lets you register a new account
             clear()
             break 
     while True:
+        global encMessages
         print('Would you like to enter an initial message? (yes/no): ')
         initial_message = input().lower()                                 # ask the user if they want to enter an initial message and lower the input
         if not initial_message.strip():                                   # if the input is blank '.strip()' removes the whitespace from the string
             print('Yes or no? ')                                          #
             time.sleep(1)                                                 #
             clear()                                                       #
-        if initial_message.startswith('y'):                                      # if the user enters 'yes' - the program will allow the user to enter a message
+        if initial_message == 'yes':                                      # if the user enters 'yes' - the program will allow the user to enter a message
             clear()                                                       #
             messages = input(f"Hi {cs(usernames.title(), 'cyan')}, enter the message you want to encrypt: ") # ask the user to enter a message
             adding_date_to_message()                                      # add the date and time to the message
@@ -106,20 +122,20 @@ def register_account():     # Function that lets you register a new account
             encryption_function()                                         # encrypt the message
             print(cs("Encrypting: ", "green"), end='', flush=True)        # print the message that the program is encrypting the message (a visual effect)
             print(print_letters_appart(encMessages))                      # print the dots separately to make the program look like it's encrypting the message and loading
-            print(cs("\nMessage added!" , "yellow"))                      #
+            print(cs("\nMessage added!" , "yellow"))                      #   
+            time.sleep(2)                                                 #      
             break                                                         # break the loop when the user enters a valid message
-        elif initial_message.startswith('n'):                                     # if the user enters 'no' - the program will not allow the user to enter a message
+        elif initial_message == 'no':                                     # if the user enters 'no' - the program will not allow the user to enter a message
             clear()                                                       #
             break                                                         # break the loop when the user enters 'no'
         elif initial_message != 'yes' or initial_message != 'no':         # if the user enters something other than 'yes' or 'no'
             print('Would you like to enter an initial message? (yes/no): ')
             clear() 
-            
 
     credentials = { # With this code we store the usernames, passwords, messages and keys of the user in the credentials dictionary
     'username': usernames,         # Store the username
     'password': hashed_passwords,  # Store the hashed password
-    'messages': messages,          # Store the message
+    'messages': encMessages.decode('utf-8'),          # Store the message
     'key': key.decode('utf-8')}    # Convert the key to a string and store it
     
     load_user_data()                              # Load the user data from the JSON file before registration
@@ -174,14 +190,14 @@ def logging_in():           # Function that lets you login to your account
                     print("Yes or no?")                                  # print the message that the user needs to enter 'yes' or 'no'
                     time.sleep(1)                                        #
                     clear()                                              #
-                elif question.startswith("y"):                                  # if the user enters 'yes' - the program will allow the user to register
+                elif question == 'yes':                                  # if the user enters 'yes' - the program will allow the user to register
                     clear()                                              #
                     print("Redirecting to registration page", end='', flush=True) # print the message that the program is redirecting to the registration page
                     print(print_letters_appart(20 * '.'))                #
                     clear()                                              #
                     register_account()                                   # call the register_account function to allow the user to register
                     break                                                # break the loop when the user enters 'yes'
-                elif question.startswith('n'):                                   # if the user enters 'no' - the program will not allow the user to register
+                elif question == 'no':                                   # if the user enters 'no' - the program will not allow the user to register
                     clear()                                              #
                     print("Redirecting to main menu", end='', flush=True)# print the message that the program is redirecting to the main menu
                     print(print_letters_appart(20 * '.'))                #
@@ -195,7 +211,7 @@ def logging_in():           # Function that lets you login to your account
 
 def logged_in_menu_ui():    # Function that shows the logged in menu choices - User Interface (Graphical part of the logged in menu) - ONLY PRINTING
     print(cs("Welcome to the encryption program. \n" , "blue"))
-    print( 'Hello ' , (cs(f"{name_input.title()} \n", "cyan")))
+    print( 'Logged in as:' , (cs(f"{name_input.title()} \n", "cyan")))
     weather.main()                                                          # call the weather.main() function to get the weather data
     print("\n")                                                             # print a new line 
     print("╔" + "═" * 22 + "╗")
@@ -203,76 +219,82 @@ def logged_in_menu_ui():    # Function that shows the logged in menu choices - U
     print("║ 4. Delete Account    ║" , "\n║ 5. Log out           ║" , "\n║ 6. Exit              ║")
     print("╚" + "═" * 22 + "╝\n")
 
-def logged_in_menu_logic(): # Function that works as menu afterlogging in (logical part of the logged in menu) 
-    logged_in_menu_ui()                                     # Calling and showing the menu choices after logging in (UI part)
-    global messages                                         # like this we are able to use the variables in the function without giving them values
-    logged_in_choice = input("Enter your choice: ").lower() # ask the user to enter a choice - it gets lowercased to make it easier to compare
-    while (logged_in_choice != 'display messages' or 'add message' or 'delete message' or 
-           'log out' or 'exit' or '1' or '2' or '3' or '4' or '5'): # loop that runs until the user enters a valid choice from the logged in menu options
-        if logged_in_choice == 'display messages' or logged_in_choice == '1': # if the user enters 'display messages' or '1' - the program will display the messages
-            clear()                                         #
-            load_user_data()                                # allows us to work with the data from the JSON file
-            read_messages_from_json()                       # reads the messages from the JSON file
-            print(cs("Displaying messages", "magenta"))     #      
-            messages = read_messages_from_json()            # read the messages from the JSON file
-            for message in messages:                        # loop that runs through the messages for every message in the messages list in the currently logged in user
-                print(message)                              # print the messages
-            input("\nPress Enter to continue...")           # ask the user to press Enter to continue, allows for better user experience
-            clear()                                         #
-            logged_in_menu_logic()                          # call the logged_in_menu_logic function to show the choices after going out of the list of messages
-            break                                           
-        elif logged_in_choice == 'add message: ' or logged_in_choice == '2': # if the user enters 'add message' or '2' - the program will allow the user to add a another message
-            clear()                                         # messages added this way will be tacked below the previous message
-            messages = input(cs("Enter a new message: ", "cyan")) # ask the user to enter a new message and color the text in cyan            
-            print(cs("Encrypting: ", "green"), end='', flush=True)# print the message that the program is encrypting the message (a visual effect) 
-            adding_date_to_message()                        # add the date and time to the message
-            write_to_json()                                 # write the message to the JSON file which includes the date and time as well
-            add_message_in_json(name_input, messages)       # add the message to the JSON file
-            print(print_letters_appart(encMessages))        # print the dots separately to make the program look like it's encrypting the message and loading
-            time.sleep(2)                                   #
-            clear()                                         #
-            logged_in_menu_logic()                          # call the logged_in_menu_logic function to show the choices after adding the message
-            break                                            
-        elif logged_in_choice == 'delete message' or logged_in_choice == '3': # if the user enters 'delete message' or '3' - the program will allow the user to delete the message
-            clear()                                         #
-            print('under construction')                     #
-                                                            #no actual code in the function yet, had no time to learn how
-            '''
-            print(cs("Deleting message", "magenta"), end='', flush=True)
+def logged_in_menu_logic():
+    logged_in_menu_ui()
+    global messages, fernet, name_input
+    import cryptography
+    while True:
+        logged_in_choice = input("Enter your choice: ").lower()
+
+        if logged_in_choice in ['display messages', '1']:
+            clear()
+            load_user_data()
+            messages_list = read_messages_from_json()
+            print(cs("Displaying messages", "magenta"))
+            for message in messages_list:
+                try:
+                    decrypted_message = fernet.decrypt(message.encode()).decode()
+                    print(decrypted_message)
+                except cryptography.fernet.InvalidToken:
+                    print("Error: Unable to decrypt message. Invalid token.")
+            input("\nPress Enter to continue...")
+            clear()
+            logged_in_menu_logic()
+            break
+
+        elif logged_in_choice in ['add message', '2']:
+            clear()
+            messages = input(cs("Enter a new message: ", "cyan"))
+            print(cs("Encrypting: ", "green"), end='', flush=True)
+            adding_date_to_message()
+            write_to_json()
+            encryption_function()
+            add_message_in_json(name_input, encMessages)
+            print(print_letters_appart(encMessages))
+            print(cs("\nMessage added!", "yellow"))
+            time.sleep(2)
+            clear()
+            logged_in_menu_logic()
+            break
+
+        elif logged_in_choice in ['delete message', '3']:
+            clear()
+            load_user_data()
+            messages_list = read_messages_from_json()
+            delete_messages()
+            break
+
+        elif logged_in_choice in ['delete account', '4']:
+            clear()
+            delete_account()
+
+        elif logged_in_choice in ['log out', '5']:
+            clear()
+            print(cs("Logging out", "magenta"), end='', flush=True)
+            print(print_letters_appart(20 * '.'))
+            time.sleep(0.5)
+            clear()
+            print(cs("Redirecting to main menu", "orange"), end='', flush=True)
+            print(print_letters_appart('..........\n\n'))
+            clear()
+            main_menu_logic()
+
+        elif logged_in_choice in ['exit', '6']:
+            clear()
+            print(cs("Exiting program", "magenta"), end='', flush=True)
             print(print_letters_appart(20 * '.'))
             time.sleep(1.5)
             clear()
-            print(cs("Message deleted", "yellow"), end='', flush=True)
-            '''
-            time.sleep(1.5)
-            clear()
-            logged_in_menu_logic()                          # going back to the menu after showing that the code is under construction
-            break
-        elif logged_in_choice == 'delete account' or logged_in_choice == '4': # if the user enters 'delete account' or '4' - the program will log out the user
-            clear()                                                              #
-  
-            # Antons delte account functions comes here
+            exit()
 
-        elif logged_in_choice == 'log out' or logged_in_choice == '5':           # if the user enters 'log out' or '4' - the program will log out the user
-            clear()                                                              #
-            print(cs("Logging out", "magenta"), end='', flush=True)              #
-            print(print_letters_appart(20 * '.'))                                #
-            time.sleep(0.5)                                                      # - A lot of visual effects to make the program look more interesting
-            clear()                                                              #
-            print(cs("Redirecting to main menu", "orange"), end='', flush=True)  #
-            print(print_letters_appart('..........\n\n'))                        #
-            clear()                                                              # 
-            main_menu_logic()                                                    # call the main_menu_logic function to show the choices after logging out
-        elif logged_in_choice == 'exit' or logged_in_choice == '5':              # if the user enters 'exit' or '5' - the program will stop running
-            clear()                                                              #
-            print(cs("Exiting program", "magenta") , end='', flush=True)         #
-            print(print_letters_appart(20 * '.'))                                #
-            time.sleep(1.5)                                                      #   
-            clear()                                                              #
-            exit()                                                               # this is where the program finally stops running - os.exit() is used to stop the program
+
+def decryption_function(): # Function that decrypts an encrypted message  
+    global fernet, message, decMessages, key
+    key = fernet.key.decode('utf-8')
+    decMessages = fernet.decrypt(message.encode()).decode() # decrypting the encrypted string with the same Fernet instance that was used for encrypting the string
 
 def load_user_data():       # Function that loads the user data from the JSON file
-    global data                                 
+    global data, encMessages                                 
     if os.path.exists(JSON_FILE) and os.stat(JSON_FILE).st_size != 0: # Check if the JSON file exists and is not empty
         with open(JSON_FILE) as json_file:                            # Open the JSON file in read mode
             data = json.load(json_file)                               # Load the data from the JSON file
@@ -292,40 +314,62 @@ def write_to_json():        # Function that writes the data to the JSON file
         json.dump(data, json_file, indent=2)  # Write the data to the JSON file
 
 def read_messages_from_json(): # Function that reads the messages from the JSON file / specifically the messages of the logged in user
-    global JSON_FILE, data, name_input       # 
+    global JSON_FILE, data, name_input, key  # 
     with open(JSON_FILE, 'r') as json_file:  # Open the JSON file in read mode
         data = json.load(json_file)          # Load the data from the JSON file
-        messages = [user['messages'] for user in data if user['username'] == name_input]  # Extracting only the "messages" field from the loggedin user's dictionary
+        messages = [user['messages'] for user in data if user['username'] == name_input]  # Extracting only the "messages" field from the loggedin user's dictionary 
     return messages                          # Return the messages
 
-def add_message_in_json(name_input, messages): # Function that adds a message to the JSON file
-    global data                              # we have to use data as a global variable - otherwise it doesnt work
-    for user in data:                        # Loop through the data list
-        if user['username'] == name_input:   # If the username is the same as the logged in user's username
-            if 'messages' in user:           # If the user has messages
-                user['messages'] += f"\n{messages}" # Add the message to the user's messages
-            else:                            # If the user doesn't have messages
-                None                         # Do nothing
-    write_to_json()                          # Write the data (aka the new message) to the JSON file
+def add_message_in_json(name_input, messages):
+    global data
+    for user in data:
+        if user['username'] == name_input:
+            if 'messages' in user:
+                if isinstance(messages, str):  # Ensure messages is a byte string
+                    messages = messages.encode()
+                user['messages'] = (user.get('messages', '').encode() + b'\n' + messages).decode()
+            else:
+                user['messages'] = messages
+            write_to_json()
+            break
 
-# NOT WORKING - I DONT KNOW IF IT WORKS AT ALL
-def delete_message_from_json(name_input, messages): # Function that deletes a message from the JSON file
-    global data                                     #
-    for user in data:                               # Loop through the data list
-        if user['username'] == name_input:          # If the username is the same as the logged in user's username
-            if 'messages' in user:                  # If the user has messages
-                user['messages'] = ""               # Delete the message
-            else:                                   # If the user doesn't have messages
-                None                                # Do nothing
-    write_to_json()                                 # Write the data (aka the deleted message) to the JSON file
 
-def encryption_function(): # Function that encrypts the message inputed by the user
+def delete_messages():
+    global name_input, messages_list, data
+    print("\nSelect the message you want to delete:")
+    for i, message in enumerate(messages_list):
+        print(f"{i+1}. {message}")
+    choice = input("Enter the number of the message you want to delete (or 'q' to cancel): ")
+    if choice == 'q':
+        clear()
+        logged_in_menu_logic()
+        return  # Return after canceling to prevent further execution
+    try:
+        index = int(choice) - 1
+        if index < 0 or index >= len(messages_list):
+            print("Invalid choice. Please try again.")
+            delete_messages()
+            return  # Return to prevent further execution
+        else:
+            del messages_list[index]
+            print("Message deleted successfully.")
+            for user in data:
+                if user['username'] == name_input:
+                    user['messages'] = '\n'.join(messages_list)
+                    write_to_json()  # Update the JSON file with the modified messages list
+                    break
+            return  # Return after deleting a message
+    except ValueError:
+        print("Invalid choice. Please try again.")
+        delete_messages()
+
+
+def encryption_function():
     global messages, encMessages, fernet
-    encMessages = fernet.encrypt(messages.encode()) # Encrypt the messages / to encrypt the string it must be encoded to byte string before encryption_function
+    encMessages = fernet.encrypt(messages.encode())
+    return encMessages  # Return the encrypted message as bytes
 
-def decryption_function(): # Function that decrypts an encrypted message  
-    global encMessages, fernet
-    messages = fernet.decrypt(encMessages).decode() # decrypting the encrypted string with the same Fernet instance that was used for encrypting the string
+
 
 def print_letters_appart(string): # Function that prints out string characters one by one
     for char in string:                   # loop that runs through the characters in the string
@@ -338,5 +382,29 @@ def adding_date_to_message(): # Function that adds the date and time to the mess
     messages += f" - Message created at: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" # Add the date and time to the message
     messages_list.append(fernet.encrypt(messages.encode()).decode('utf-8'))                       # Encrypt and add the message to the list       
 
-#======================================================================================================
+def delete_account():
+    global name_input, data, JSON_FILE
+    while True:
+        confirmation = input("Are you sure you want to delete your account? (yes/no): ").lower()
+        if confirmation.startswith('y'):
+            data = [user for user in data if user['username'] != name_input]
+            write_to_json()
+            print(cs("Account deleted successfully!", "yellow"))
+            time.sleep(2)
+            clear()
+            print(cs("Redirecting to main menu", "orange"), end='', flush=True)
+            print(print_letters_appart(20 * '.'))
+            time.sleep(0.5)
+            clear()
+            main_menu_logic()
+            break
+        elif confirmation.startswith('n'):
+            clear()
+            logged_in_menu_logic()
+            break
+        else:
+            print("Invalid input. Please enter 'yes' or 'no'.")
+            time.sleep(1)
+            clear()
+
 main_menu_logic() # This is where the program starts.
