@@ -114,7 +114,7 @@ def register_account():     # Function that lets you register a new account
             print('Yes or no? ')                                          #
             time.sleep(1)                                                 #
             clear()                                                       #
-        if initial_message == 'yes':                                      # if the user enters 'yes' - the program will allow the user to enter a message
+        if initial_message.startswith('y'):                                      # if the user enters 'yes' - the program will allow the user to enter a message
             clear()                                                       #
             messages = input(f"Hi {cs(usernames.title(), 'cyan')}, enter the message you want to encrypt: ") # ask the user to enter a message
             adding_date_to_message()                                      # add the date and time to the message
@@ -125,7 +125,7 @@ def register_account():     # Function that lets you register a new account
             print(cs("\nMessage added!" , "yellow"))                      #   
             time.sleep(2)                                                 #      
             break                                                         # break the loop when the user enters a valid message
-        elif initial_message == 'no':                                     # if the user enters 'no' - the program will not allow the user to enter a message
+        elif initial_message.startswith('n'):                                     # if the user enters 'no' - the program will not allow the user to enter a message
             clear()                                                       #
             break                                                         # break the loop when the user enters 'no'
         elif initial_message != 'yes' or initial_message != 'no':         # if the user enters something other than 'yes' or 'no'
@@ -343,13 +343,11 @@ def delete_messages():
     if choice == 'q':
         clear()
         logged_in_menu_logic()
-        return  # Return after canceling to prevent further execution
     try:
         index = int(choice) - 1
         if index < 0 or index >= len(messages_list):
             print("Invalid choice. Please try again.")
             delete_messages()
-            return  # Return to prevent further execution
         else:
             del messages_list[index]
             print("Message deleted successfully.")
@@ -357,8 +355,8 @@ def delete_messages():
                 if user['username'] == name_input:
                     user['messages'] = '\n'.join(messages_list)
                     write_to_json()  # Update the JSON file with the modified messages list
-                    break
-            return  # Return after deleting a message
+                    time.sleep(2)
+                    delete_messages()
     except ValueError:
         print("Invalid choice. Please try again.")
         delete_messages()
