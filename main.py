@@ -271,7 +271,7 @@ def logged_in_menu_logic():     # Function that works at the program menu once l
             print(cs("Exiting program", "magenta"), end='', flush=True)     # Nice texts effects...
             print(print_letters_appart(20 * '.'))
             time.sleep(1.5)
-            clear()
+            clear()                                                         # clear terminal
             exit()                                                          # exit the program
 
 def load_user_data():       # Function that loads the user data from the JSON file
