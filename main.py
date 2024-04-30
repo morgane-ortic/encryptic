@@ -2,13 +2,13 @@
 
 import requests                         # allows us to send HTTP requests
 import datetime                         # allows us to work with dates and times
+import weather                          # allows us to work with the weather.py file which helps us to get the weather data
 import json                             # allows us to work with JSON files
 import time                             # allows us to work with time / different frin datetime
 import os                               # allows us to interact with the operating system
 from cryptography.fernet import Fernet  # allows us to encrypt and decrypt data
 from flask_bcrypt import Bcrypt         # allows us to hash passwords
 from stringcolor import cs              # allows us to color the text in the terminal
-import weather                          # allows us to work with the weather.py file which helps us to get the weather data
 
 #======================================================================================================
 #Global variables - variables that are used in multiple functions:: - we put them here to shorten the code and make the code more readable
@@ -197,7 +197,7 @@ def logging_in():           # Function that lets you login to your account
                     clear()                                              #
 
 def logged_in_menu_ui():    # Function that shows the logged in menu choices - User Interface (Graphical part of the logged in menu) - ONLY PRINTING
-    print(cs("Welcome to the encryption program. \n" , "blue"))
+    print(cs("Welcome to the encryption program. \n" , "blue"))             
     print( 'Logged in as:' , (cs(f"{name_input.title()} \n", "cyan")))
     weather.main()                                                          # call the weather.main() function to get the weather data
     print("\n")                                                             # print a new line 
