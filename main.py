@@ -301,111 +301,111 @@ def read_messages_from_json(): # Function that reads the messages from the JSON 
         messages = [user['messages'] for user in data if user['username'] == name_input]  # Extracting only the "messages" field from the loggedin user's dictionary 
     return messages                          # Return the messagesa
 
-def add_message_in_json(name_input, messages):
-    global data
-    for user in data:
-        if user['username'] == name_input:
-            if 'messages' in user:
-                if isinstance(messages, str):  # Ensure messages is a byte string
-                    messages = messages.encode()
-                user['messages'] = (user.get('messages', '').encode() + b'\n' + messages).decode()
-            else:
-                user['messages'] = messages
-            write_to_json()
-            break
+def add_message_in_json(name_input, messages):   # Function that adds the message to the JSON file
+    global data                                  # we have to use data as a global variable - otherwise it doesnt work
+    for user in data:                            # Loop through the data list
+        if user['username'] == name_input:       # If the username matches the logged in user
+            if 'messages' in user:               # If the user has messages
+                if isinstance(messages, str):    # Ensure messages is a byte string
+                    messages = messages.encode() # Convert messages to bytes
+                user['messages'] = (user.get('messages', '').encode() + b'\n' + messages).decode() # Add the new message to the existing messages
+            else:                                # If the user has no messages
+                user['messages'] = messages      # Add the message to the user's dictionary
+            write_to_json()                      # Write the data back to the JSON file
+            break                                # Break the loop
 
-def delete_messages():
-    global name_input, messages_list, data
-    import cryptography
-    clear()
-    print("\nSelect the message you want to delete:")
-    load_user_data()
-    messages_string = read_messages_from_json()[0]  # Get the first (and only) item in the list
-    messages_list = messages_string.split('\n')  # Split the string into individual messages
-    for i, message in enumerate(messages_list):
+def delete_messages():                                # Function that deletes the messages
+    global name_input, messages_list, data            # we have to use name_input, messages_list and data as global variables - otherwise it doesnt work
+    import cryptography                               # Import the cryptography module in the function to avoid errors
+    clear()                                           
+    print("\nSelect the message you want to delete:") 
+    load_user_data()                                  # Load the user data from the JSON file
+    messages_string = read_messages_from_json()[0]    # Get the first (and only) item in the list
+    messages_list = messages_string.split('\n')       # Split the string into individual messages
+    for i, message in enumerate(messages_list):       # Loop through the messages list
         try:
-            decrypted_message = fernet.decrypt(message.encode()).decode()
-            print(f"{i+1}. {decrypted_message}")
-        except cryptography.fernet.InvalidToken:
-            print("Error: Unable to decrypt message. Invalid token.")
+            decrypted_message = fernet.decrypt(message.encode()).decode() # Decrypt the message
+            print(f"{i+1}. {decrypted_message}")                          # Print the decrypted message
+        except cryptography.fernet.InvalidToken:                          # If the message cannot be decrypted
+            print("Error: Unable to decrypt message. Invalid token.")     # Print an error message
     # rest of the function...
-    choice = input("Enter the number of the message you want to delete (or 'q' to cancel): ")
-    if choice == 'q':
-        clear()
-        logged_in_menu_logic()
+    choice = input("Enter the number of the message you want to delete (or 'q' to cancel): ") 
+    if choice == 'q':                                 # If the user enters 'q' - cancel the deletion
+        clear()                                       # Clear the terminal before returning to the logged in menu
+        logged_in_menu_logic()                        # Go back to the start of the logged in menu
     try:
-        index = int(choice) - 1
-        if index < 0 or index >= len(messages_list):
-            print("Invalid choice. Please try again.")
-            time.sleep(2)
-            delete_messages()
-            return  # Return to prevent further execution
+        index = int(choice) - 1                       # Convert the choice to an integer and subtract 1 to get the index
+        if index < 0 or index >= len(messages_list):  # If the index is out of range
+            print("Invalid choice. Please try again.")# Print an error message
+            time.sleep(2)                             # Wait for 2 seconds before returning to the delete_messages function
+            delete_messages()                         # Return to the delete_messages function
+            return                                    # Return to prevent further execution
         else:
-            del messages_list[index]
-            print("Message deleted successfully.")
-            for user in data:
-                if user['username'] == name_input:
-                    user['messages'] = '\n'.join(messages_list)
-                    write_to_json()  # Update the JSON file with the modified messages list
-                    time.sleep(2)
-                    delete_messages()
-    except ValueError:
-        print("Invalid choice. Please try again.")
-        delete_messages()
+            del messages_list[index]                  # Delete the message at the specified index
+            print("Message deleted successfully.")    # Print the message that the message was deleted successfully
+            for user in data:                         # Loop through the data list
+                if user['username'] == name_input:    # If the username matches the logged in user
+                    user['messages'] = '\n'.join(messages_list) # Join the messages list into a string
+                    write_to_json()                   # Update the JSON file with the modified messages list
+                    time.sleep(2)                     # Wait for 2 seconds before returning to the logged in menu
+                    delete_messages()                 # Return to the delete_messages function
+    except ValueError:                                # If the user enters a non-integer value
+        print("Invalid choice. Please try again.")    # Print an error message
+        delete_messages()                             # Return to the delete_messages function
 
-def encryption_function():
-    global messages, encMessages, fernet
-    encMessages = fernet.encrypt(messages.encode())
-    return encMessages  # Return the encrypted message as bytes
+def encryption_function():                          # Function that encrypts the message
+    global messages, encMessages, fernet            # we have to use messages, encMessages and fernet as global variables - otherwise it doesnt work
+    encMessages = fernet.encrypt(messages.encode()) # Encrypt the message and store it in the variable
+    return encMessages                              # Return the encrypted message as bytes
 
-def print_letters_appart(string): # Function that prints out string characters one by one
+def print_letters_appart(string):         # Function that prints out string characters one by one
     for char in string:                   # loop that runs through the characters in the string
         time.sleep(0.03)                  # wait for 0.03 seconds before printing the next character
         print(char, end=' ', flush=True)  # print the character and flush the output buffer
     return ''                             # return an empty string
 
-def adding_date_to_message(): # Function that adds the date and time to the message
+def adding_date_to_message():             # Function that adds the date and time to the message
     global messages
     messages += f" - Message created at: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" # Add the date and time to the message
     messages_list.append(fernet.encrypt(messages.encode()).decode('utf-8'))                       # Encrypt and add the message to the list       
 
-def delete_account():       # Function that deletes the account of the logged in user
+def delete_account():                      # Function that deletes the account of the logged in user
     global name_input, data, JSON_FILE     # we have to use name_input, data and JSON_FILE as global variables - otherwise it doesnt work
-    while True:                         # loop that runs until the user enters a valid choice
-        confirmation = input("Are you sure you want to delete your account? (yes/no): ").lower()    # ask the user if they want to delete their account and lower the input
-        if confirmation.startswith('y'):    # if the user enters 'yes' - the program will delete the account
-            data = [user for user in data if user['username'] != name_input]    # Delete the user from the data list
-            write_to_json()                                                 # Write the data back to the JSON file
-            print(cs("Account deleted successfully!", "yellow"))         # print the message that the account was deleted successfully
+    while True:                            # loop that runs until the user enters a valid choice
+        confirmation = input("Are you sure you want to delete your account? (yes/no): ").lower() # ask the user if they want to delete their account and lower the input
+        if confirmation.startswith('y'):                                          # if the user enters 'yes' - the program will delete the account
+            data = [user for user in data if user['username'] != name_input]      # Delete the user from the data list
+            write_to_json()                                                       # Write the data back to the JSON file
+            print(cs("Account deleted successfully!", "yellow"))                  # print the message that the account was deleted successfully
             time.sleep(2)   
             clear()    
             print(cs("Redirecting to main menu", "orange"), end='', flush=True)   # print the message that the program is redirecting to the main menu
-            print(print_letters_appart(20 * '.'))                              # print the dots separately to make the program look like it's redirecting
-            time.sleep(0.5)                                                  # wait for 0.5 seconds before redirecting to the main menu
+            print(print_letters_appart(20 * '.'))                                 # print the dots separately to make the program look like it's redirecting
+            time.sleep(0.5)                                                       # wait for 0.5 seconds before redirecting to the main menu
             clear()
-            main_menu_logic()                                             # call the main_menu_logic function to show the choices again after deleting the account
-            break                                                    # break the loop when the user enters 'yes'
+            main_menu_logic()                # call the main_menu_logic function to show the choices again after deleting the account
+            break                            # break the loop when the user enters 'yes'
         elif confirmation.startswith('n'):   # if the user enters 'no' - the program will not delete the account
             clear()  
-            logged_in_menu_logic()         # call the logged_in_menu_logic function to show the choices again after not deleting the account
-            break                        # break the loop when the user enters 'no'
-        else:                         # if the user enters something other than 'yes' or 'no'
+            logged_in_menu_logic()      # call the logged_in_menu_logic function to show the choices again after not deleting the account
+            break                       # break the loop when the user enters 'no'
+        else:                           # if the user enters something other than 'yes' or 'no'
             print("Invalid input. Please enter 'yes' or 'no'.")   # print the message that the user needs to enter 'yes' or 'no'
             time.sleep(1)   
-            clear()                # wait for 1 second before clearing the terminal
+            clear()                     # wait for 1 second before clearing the terminal
 
-def load_key():  # Function that loads the encryption key from the file
+def load_key():                         # Function that loads the encryption key from the file
     key_file = "encryption_key.txt"     # variable that stores the path to the file with the encryption key
-    if os.path.exists(key_file):     # if the file with the encryption key exists
-        with open(key_file, "rb") as f:             # open the file in read mode
-            key = f.read()                       # read the key from the file
+    if os.path.exists(key_file):        # if the file with the encryption key exists
+        with open(key_file, "rb") as f: # open the file in read mode
+            key = f.read()              # read the key from the file
     else:                               # if the file with the encryption key does not exist
         key = Fernet.generate_key()     # generate a new key
-        with open(key_file, "wb") as f:         # open the file in write mode
-            f.write(key)            # write the key to the file
-    return key                    # return the key
+        with open(key_file, "wb") as f: # open the file in write mode
+            f.write(key)                # write the key to the file
+    return key                          # return the key
 
-key = load_key()        # load the encryption key
-fernet = Fernet(key)            # create a Fernet instance with the key
+key = load_key()                        # load the encryption key
+fernet = Fernet(key)                    # create a Fernet instance with the key
 
-main_menu_logic() # This is where the program starts.
+main_menu_logic()                       # This is where the program starts.
